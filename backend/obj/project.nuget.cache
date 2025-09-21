@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "TOIZQTTwr5w=",
+  "success": true,
+  "projectFilePath": "D:\\Desktop\\Uni\\2025_autumn\\PSi\\psi-2025-collaborative-playlist\\backend\\MyApi.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Emilijos AK\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.9\\microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
+    "C:\\Users\\Emilijos AK\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}

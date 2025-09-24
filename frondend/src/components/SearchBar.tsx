@@ -12,8 +12,10 @@ export default function SearchBar() {
     if (!query.trim()) return;
 
     try {
+      // ✅ Use environment variable instead of hardcoded URL
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
       const response = await fetch(
-        `http://localhost:5000/api/Spotify/search/${encodeURIComponent(query)}`
+        `${apiBaseUrl}/api/Spotify/search/${encodeURIComponent(query)}`
       );
       const data: SpotifyResponse = await response.json();
       setResults(data.tracks?.items || []);

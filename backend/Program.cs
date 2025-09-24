@@ -3,15 +3,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 
-// ✅ Add CORS policy
+// ✅ Get allowed origins from configuration
+var allowedOrigins = builder.Configuration.GetSection("CORS:AllowedOrigins").Get<string[]>() 
+                     ?? new[] { "http://localhost:3000", "http://localhost:5173" };
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost5173",
-        builder =>
+    options.AddPolicy("AllowFrontendOrigins",
+        corsBuilder =>
         {
-            builder.WithOrigins("http://localhost:5173") // your frontend origin
-                   .AllowAnyHeader()
-                   .AllowAnyMethod();
+            corsBuilder.WithOrigins(allowedOrigins)
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
         });
 });
 
@@ -22,8 +25,8 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-// ✅ Enable CORS
-app.UseCors("AllowLocalhost5173");
+// ✅ Enable CORS with configurable policy
+app.UseCors("AllowFrontendOrigins");
 
 app.UseAuthorization();
 

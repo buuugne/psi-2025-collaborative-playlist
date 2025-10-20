@@ -13,19 +13,29 @@ export default function SearchBar({ onSongSelect }: SearchBarProps) {
   const [results, setResults] = useState<Track[]>([]);
 
   const handleSearch = async () => {
-    if (!query.trim()) return;
+  if (!query.trim()) return;
 
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/Spotify/search/${encodeURIComponent(query)}`
-      );
-      const data: SpotifyResponse = await response.json();
-      setResults(data.tracks?.items || []);
-    } catch (error) {
-      console.error("Search failed:", error);
-      setResults([]);
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/Spotify/search/${encodeURIComponent(query)}`
+    );
+
+    // ✅ If backend returned an error (500 etc.)
+    if (!response.ok) {
+      const text = await response.text(); // read the error text
+      throw new Error(`Server error ${response.status}: ${text}`);
     }
-  };
+
+    // ✅ Try parsing JSON only when response is OK
+    const data: SpotifyResponse = await response.json();
+    setResults(data.tracks?.items || []);
+  } catch (error) {
+    console.error("Search failed:", error);
+    alert("Spotify search failed — check backend or token validity.");
+    setResults([]); // clear results on error
+  }
+};
+
 
   return (
     <>

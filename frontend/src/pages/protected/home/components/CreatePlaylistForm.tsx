@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Globe, Lock, Clock } from "lucide-react";
+import { Sparkles} from "lucide-react";
 import type { Playlist } from "../../../../types/Playlist";
 import { PlaylistService } from "../../../../services/PlaylistService";
 import { authService } from "../../../../services/authService";

@@ -1,4 +1,3 @@
-import { authService } from "./authService";
 import api from "./api";
 
 export const UserService = {

@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { PlaylistService } from "../../../services/PlaylistService";
 import { songService } from "../../../services/SongService";
-import { authService } from "../../../services/authService";
+// import { authService } from "../../../services/authService";
 import { useSpotifyPlayer } from "../../../context/SpotifyPlayerContext";
 import CollaboratorModal from "./components/CollaboratorModal";
 import type { PlaylistResponseDto } from "../../../types/PlaylistResponseDto";
@@ -55,7 +55,7 @@ export default function PlaylistDetailPage() {
   const { play, pause, playerState, spotifyToken, deviceId } =
     useSpotifyPlayer();
 
-  const currentUser = authService.getUser();
+  // const currentUser = authService.getUser();
 
   useEffect(() => {
     loadPlaylist();

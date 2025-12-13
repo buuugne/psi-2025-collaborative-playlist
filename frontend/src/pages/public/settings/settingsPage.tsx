@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Upload } from 'lucide-react';
 import { UserService } from '../../../services/UserService';
-import './SettingsPage.scss';
+import './settingsPage.scss';
 
 const API_BASE = import.meta.env.VITE_API_URL;
 

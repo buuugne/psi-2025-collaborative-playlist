@@ -39,27 +39,14 @@ builder.Services.AddScoped<ICollaborativePlaylistService, CollaborativePlaylistS
 //  CORS — leidžiam frontend'ui jungtis prie API
 // ===================================================
 
-var frontendUrl = builder.Configuration["FrontendUrl"] ?? "http://localhost:5173";
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        if (frontendUrl == "*")
-        {
-            // Allow all origins (for testing)
-            policy.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        }
-        else
-        {
-            // Allow specific origin
-            policy.WithOrigins(frontendUrl)
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-                  //.AllowCredentials();
-        }
+        policy.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 

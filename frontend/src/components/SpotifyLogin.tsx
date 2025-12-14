@@ -44,8 +44,8 @@ export default function SpotifyLogin() {
       
       setSpotifyToken(data.accessToken);
 
-      // Clean up URL
-      window.history.replaceState({}, document.title, window.location.pathname);
+      // Redirect to /home after successful connection
+      window.location.href = '/home';
     } catch (error) {
       console.error("Authentication failed:", error);
       alert(`Failed to authenticate with Spotify: ${error}`);
@@ -89,43 +89,57 @@ export default function SpotifyLogin() {
 
   if (spotifyToken) {
     return (
-      <div className="fixed top-4 right-4 flex gap-2 z-50">
-        <div className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
-          ✅ Spotify Connected
-        </div>
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg transition-colors"
-        >
-          Disconnect
-        </button>
-      </div>
+      <button
+        onClick={handleLogout}
+        style={{
+          position: 'fixed',
+          bottom: '1rem',
+          right: '1rem',
+          backgroundColor: '#059669',
+          color: 'white',
+          fontSize: '0.875rem',
+          fontWeight: '500',
+          padding: '0.5rem 1rem',
+          borderRadius: '0.5rem',
+          border: 'none',
+          cursor: 'pointer',
+          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+          zIndex: 50
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#047857'}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#059669'}
+        title="Disconnect Spotify"
+      >
+        🎵 Connected
+      </button>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-neutral-900 p-8 rounded-xl shadow-2xl text-center max-w-md">
-        <div className="text-6xl mb-4">🎵</div>
-        <h2 className="text-2xl font-bold text-white mb-4">Connect to Spotify</h2>
-        <p className="text-gray-400 mb-6">
-          You need to connect your Spotify account to play music.
-          <br />
-          <span className="text-sm">(Requires Spotify Premium)</span>
-        </p>
-        
-        <button
-          onClick={handleLogin}
-          disabled={isLoading}
-          className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
-        >
-          {isLoading ? "Connecting..." : "Connect with Spotify"}
-        </button>
-
-        <p className="text-xs text-gray-500 mt-4">
-          This will redirect you to Spotify to authorize the app
-        </p>
-      </div>
-    </div>
+    <button
+      onClick={handleLogin}
+      disabled={isLoading}
+      style={{
+        position: 'fixed',
+        bottom: '1rem',
+        right: '1rem',
+        backgroundColor: isLoading ? '#4b5563' : '#1e293b',
+        color: 'white',
+        fontSize: '0.875rem',
+        fontWeight: '500',
+        padding: '0.5rem 1rem',
+        borderRadius: '0.5rem',
+        border: 'none',
+        cursor: isLoading ? 'not-allowed' : 'pointer',
+        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+        opacity: isLoading ? 0.5 : 1,
+        zIndex: 50
+      }}
+      onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#334155')}
+      onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#1e293b')}
+      title="Connect to Spotify"
+    >
+      {isLoading ? "..." : "🎵 Connect"}
+    </button>
   );
 }

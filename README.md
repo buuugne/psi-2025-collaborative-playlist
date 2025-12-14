@@ -19,7 +19,7 @@ It allows users to search for songs, create playlists, and manage them in a clea
 - **Frontend:** React (TypeScript), TailwindCSS  
 - **Backend:** C# (.NET 6, ASP.NET Core Web API)  
 - **Database:** SQL Server *(planned)*  
-- **API:** Spotify Web API *(future integration, currently mock data)*  
+- **API:** Spotify Web API *(future integration, currently mock data)*   
 
 ---
 

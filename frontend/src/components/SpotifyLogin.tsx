@@ -93,8 +93,8 @@ export default function SpotifyLogin() {
         onClick={handleLogout}
         style={{
           position: 'fixed',
-          bottom: '1rem',
-          right: '1rem',
+          top: '60rem',
+          left: '115rem',
           backgroundColor: '#059669',
           color: 'white',
           fontSize: '0.875rem',
@@ -104,7 +104,7 @@ export default function SpotifyLogin() {
           border: 'none',
           cursor: 'pointer',
           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-          zIndex: 50
+          zIndex: 10000
         }}
         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#047857'}
         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#059669'}
@@ -121,8 +121,8 @@ export default function SpotifyLogin() {
       disabled={isLoading}
       style={{
         position: 'fixed',
-        bottom: '1rem',
-        right: '1rem',
+        top: '60rem',
+        left: '115rem',
         backgroundColor: isLoading ? '#4b5563' : '#1e293b',
         color: 'white',
         fontSize: '0.875rem',
@@ -133,7 +133,7 @@ export default function SpotifyLogin() {
         cursor: isLoading ? 'not-allowed' : 'pointer',
         boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
         opacity: isLoading ? 0.5 : 1,
-        zIndex: 50
+        zIndex: 10000
       }}
       onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#334155')}
       onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#1e293b')}

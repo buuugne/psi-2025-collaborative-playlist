@@ -1,75 +1,129 @@
 .loginPage {
   margin-top: 80px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
+
 .loginPage .loginBox {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   background-color: #0f1516;
   border: 1px solid #1e2426;
   padding: 40px 20px;
   border-radius: 20px;
 }
+
 .loginPage .loginBox .header {
   font-size: 32px;
 }
+
 .loginPage .loginBox .text {
   font-size: 16px;
   font-weight: 100;
   color: #6b7778;
 }
+
 .loginPage .loginBox form {
   width: 100%;
 }
+
 .loginPage .loginBox form .formGroup {
   width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   margin-bottom: 10px;
 }
+
 .loginPage .loginBox form .formGroup label {
   font-size: 16px;
   font-weight: 100;
   color: #6b7778;
 }
+
 .loginPage .loginBox form .formGroup input {
   border-radius: 20px;
   padding: 8px;
   border: 1px solid #1e2426;
-  background-color: rgba(20, 12, 12, 0.337254902) !important;
+  background-color: #140c0c56 !important;
   width: 100%;
 }
-.loginPage .loginBox form .formGroup input::-moz-placeholder {
+
+.loginPage .loginBox form .formGroup input::-webkit-input-placeholder {
   font-size: 16px;
   font-weight: 100;
-  color: rgba(107, 119, 120, 0.2431372549);
+  color: #6b77783e;
 }
+
+.loginPage .loginBox form .formGroup input:-ms-input-placeholder {
+  font-size: 16px;
+  font-weight: 100;
+  color: #6b77783e;
+}
+
+.loginPage .loginBox form .formGroup input::-ms-input-placeholder {
+  font-size: 16px;
+  font-weight: 100;
+  color: #6b77783e;
+}
+
 .loginPage .loginBox form .formGroup input::placeholder {
   font-size: 16px;
   font-weight: 100;
-  color: rgba(107, 119, 120, 0.2431372549);
+  color: #6b77783e;
 }
+
 .loginPage .signInBtn {
   width: 100%;
   border-radius: 20px;
   padding: 8px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   font-weight: 100;
   margin-bottom: 20px;
 }
+
 .loginPage .signInBtn .icon {
   margin-right: 8px;
 }
+
 .loginPage .signupText {
   text-align: center;
-  align-self: center;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
 }
+
 .loginPage .signupText .grey {
   color: #6b7778;
-}/*# sourceMappingURL=loginPage.module.css.map */
+}
+/*# sourceMappingURL=loginPage.module.css.map */

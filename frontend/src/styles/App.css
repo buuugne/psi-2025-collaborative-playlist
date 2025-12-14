@@ -1,61 +1,108 @@
 .main-page {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: row;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
 }
+
 .main-page .vDivider {
   width: 1px;
   height: 100vw;
   margin: 0 15px;
-  background: rgba(255, 255, 255, 0.0862745098);
+  background: #ffffff16;
   border-bottom: 1px solid black;
 }
+
 .main-page .left-side {
   max-width: 40%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
+
 .main-page .right-side {
-  flex: 1;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   gap: 10px;
 }
+
 .main-page .right-side #search-bar {
   width: 80%;
   padding: 5px;
   background: #212121;
   color: white;
-  border: 1px solid #1aa64b;
-  box-shadow: rgba(100, 100, 111, 0.096) 0px 7px 29px 0px;
+  border: 1px solid 	#1aa64b;
+  -webkit-box-shadow: rgba(100, 100, 111, 0.096) 0px 7px 29px 0px;
+          box-shadow: rgba(100, 100, 111, 0.096) 0px 7px 29px 0px;
 }
-.main-page .right-side #search-bar::-moz-placeholder {
+
+.main-page .right-side #search-bar::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.79);
   text-align: center;
 }
+
+.main-page .right-side #search-bar:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.79);
+  text-align: center;
+}
+
+.main-page .right-side #search-bar::-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.79);
+  text-align: center;
+}
+
 .main-page .right-side #search-bar::placeholder {
   color: rgba(255, 255, 255, 0.79);
   text-align: center;
 }
+
 .main-page .right-side #search-bar:focus {
   border: 1px solid #457e59;
 }
 
 .home-page-btns {
-  align-self: flex-end;
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   gap: 400px;
 }
 
 .add-playlist-btn {
   padding: 10px;
   border: none;
-  box-shadow: rgba(100, 100, 111, 0.096) 0px 7px 29px 0px;
+  -webkit-box-shadow: rgba(100, 100, 111, 0.096) 0px 7px 29px 0px;
+          box-shadow: rgba(100, 100, 111, 0.096) 0px 7px 29px 0px;
   background-color: #1aa64b;
   font-weight: 600;
 }
+
 .add-playlist-btn:hover {
-  transform: scale(1.05);
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
   border-radius: 5px;
-}/*# sourceMappingURL=App.css.map */
+}
+/*# sourceMappingURL=App.css.map */

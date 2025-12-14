@@ -16,6 +16,8 @@ export default function SongSearch({ onSongAdded, playlists }: SongSearchProps) 
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const safePlaylistsArray = Array.isArray(playlists) ? playlists : [];
+
   const handleSearch = async () => {
     if (!query.trim()) {
       setResults([]);
@@ -67,7 +69,7 @@ export default function SongSearch({ onSongAdded, playlists }: SongSearchProps) 
           className="song-search__select"
         >
           <option value="">-- Select playlist --</option>
-          {playlists.map((p) => (
+          {safePlaylistsArray.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name}
             </option>

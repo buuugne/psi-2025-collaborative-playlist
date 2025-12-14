@@ -17,25 +17,23 @@ export default function PlaylistCard({ playlist, onClick, onUpdated, onDeleted }
   const [descriptionInput, setDescriptionInput] = useState(playlist.description || "");
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const API_BASE = import.meta.env.VITE_API_URL;
 
 
-  // Helper function to get the correct image URL
   const getImageUrl = () => {
     if (!playlist.imageUrl) {
       return `https://picsum.photos/seed/${playlist.id}/300`;
     }
-
-    // If imageUrl is already a complete URL (starts with http)
+  
+  
     if (playlist.imageUrl.startsWith('http')) {
       return playlist.imageUrl;
     }
-
-    // If it's a relative path, prepend the backend base URL
-    const baseUrl =  API_BASE.replace(/\/$/, "");
+ 
     const path = playlist.imageUrl.startsWith('/') ? playlist.imageUrl : `/${playlist.imageUrl}`;
-    return `${baseUrl}${path}`;
+    return path;
   };
+
+
 
   const handleSave = async (e?: React.MouseEvent) => {
     e?.stopPropagation();

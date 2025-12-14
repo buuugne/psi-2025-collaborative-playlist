@@ -1,0 +1,288 @@
+.playerbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  padding: 14px 24px;
+  background: rgba(15, 20, 25, 0.85);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  -webkit-box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.4);
+  font-family: Inter, sans-serif;
+}
+
+.playerbar__content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 32px;
+}
+
+.playerbar__track {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  min-width: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 14px;
+}
+
+.playerbar__cover {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  overflow: hidden;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.playerbar__cover img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.playerbar__track-text {
+  min-width: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.playerbar__title {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playerbar__artist {
+  color: #b3b3b3;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playerbar__center {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+}
+
+.playerbar__controls {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 16px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.playerbar__icon-btn {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
+  border-radius: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  color: #e6eef8;
+  cursor: pointer;
+  -webkit-transition: 0.2s ease;
+  transition: 0.2s ease;
+}
+
+.playerbar__icon-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-transform: scale(1.08);
+          transform: scale(1.08);
+}
+
+.playerbar__icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.playerbar__play {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: none;
+  background: #1db954;
+  color: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  cursor: pointer;
+  -webkit-transition: 0.2s ease;
+  transition: 0.2s ease;
+}
+
+.playerbar__play svg {
+  width: 22px;
+  height: 22px;
+}
+
+.playerbar__play:hover {
+  background: #1ed760;
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+
+.playerbar__progress {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.playerbar__time {
+  font-size: 11px;
+  color: #b3b3b3;
+  width: 38px;
+  text-align: center;
+}
+
+.playerbar__seek {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+
+.playerbar__seek::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 4px;
+  background: -webkit-gradient(linear, left top, right top, from(#1db954), to(rgba(255, 255, 255, 0.15)));
+  background: linear-gradient(to right, #1db954 var(--progress), rgba(255, 255, 255, 0.15) var(--progress));
+}
+
+.playerbar__seek::-webkit-slider-thumb {
+  -webkit-appearance: none;
+          appearance: none;
+  width: 13px;
+  height: 13px;
+  background: #1db954;
+  border-radius: 50%;
+  -webkit-transform: translateY(-4px);
+          transform: translateY(-4px);
+  -webkit-transition: 0.15s ease;
+  transition: 0.15s ease;
+}
+
+.playerbar__seek::-webkit-slider-thumb:hover {
+  -webkit-transform: translateY(-4px) scale(1.1);
+          transform: translateY(-4px) scale(1.1);
+}
+
+.playerbar__volume {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 14px;
+}
+
+.playerbar__volume-icon {
+  color: #d0d0d0;
+}
+
+.playerbar__volume-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.playerbar__volume-slider {
+  width: 110px;
+  height: 4px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.playerbar__volume-slider::-webkit-slider-runnable-track {
+  background: -webkit-gradient(linear, left top, right top, from(#1db954), to(rgba(255, 255, 255, 0.15)));
+  background: linear-gradient(to right, #1db954 var(--volume), rgba(255, 255, 255, 0.15) var(--volume));
+  height: 4px;
+  border-radius: 4px;
+}
+
+.playerbar__volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+          appearance: none;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #1db954;
+  margin-top: -4px;
+}
+/*# sourceMappingURL=SpotifyPlayerBar.css.map */

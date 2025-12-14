@@ -39,11 +39,11 @@ export default function HomePage() {
     await loadPlaylists();
   };
 
-  const handlePlaylistUpdated = async (updated: Playlist) => {
+  const handlePlaylistUpdated = async () => {
     await loadPlaylists();
   };
 
-  const handlePlaylistDeleted = async (id: number) => {
+  const handlePlaylistDeleted = async () => {
     await loadPlaylists();
   };
 

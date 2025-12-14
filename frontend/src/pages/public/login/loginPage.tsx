@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LogIn } from "lucide-react";
-import styles from "./LoginPage.module.css";
+import styles from "./loginPage.module.css";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../../../services/authService";
 

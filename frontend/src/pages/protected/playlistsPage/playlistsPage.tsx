@@ -6,7 +6,7 @@ import Modal from "../../../components/Modal";
 import CreatePlaylistForm from "../home/components/CreatePlaylistForm";
 import type { Playlist } from "../../../types/Playlist";
 import { PlaylistService } from "../../../services/PlaylistService";
-import "./PlaylistsPage.scss";
+import "./playlistsPage.scss";
 
 export default function PlaylistsPage() {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Music2 } from "lucide-react";
-import "./Header.scss";
+import "./header.scss";
 import { Divider } from "../divider/divider";
 
 interface HeaderProps {

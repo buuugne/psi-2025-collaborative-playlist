@@ -1,9 +1,19 @@
 .landing {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
+
 .landing .heroDiv {
   margin-top: 60px;
   margin-bottom: 16px;
@@ -14,20 +24,31 @@
   font-size: 12px;
   border-radius: 10px;
   width: 300px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
+
 .landing .heroDiv:hover {
-  transform: scale(1.02);
+  -webkit-transform: scale(1.02);
+          transform: scale(1.02);
 }
+
 .landing .heroDiv .sparklesIcon {
   margin-right: 8px;
 }
+
 .landing .header {
   font-size: 62px;
   text-align: center;
 }
+
 .landing .desc {
   color: #6b7778;
   font-weight: 200;
@@ -35,49 +56,82 @@
   font-size: 24px;
   margin-bottom: 20px;
 }
+
 .landing .landingBtns {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   gap: 20px;
 }
+
 .landing .landingBtns button {
   border-radius: 20px;
   padding: 8px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   font-weight: 100;
 }
+
 .landing .landingBtns button .playIcon, .landing .landingBtns button .plusIcon {
   margin-right: 8px;
 }
+
 .landing .landingPerks {
   margin-top: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: row;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
   gap: 15px;
 }
+
 .landing .landingPerks div {
   background-color: #0f1516;
   border: 1px solid #1e2426;
   border-radius: 10px;
   padding: 8px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   height: 200px;
 }
+
 .landing .landingPerks div:hover {
-  transform: scale(1.05);
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
 }
+
 .landing .landingPerks div .icon {
   margin-bottom: 10px;
 }
+
 .landing .landingPerks div h3 {
   text-align: center;
   font-size: 24px;
 }
+
 .landing .landingPerks div p {
   color: #6b7778;
   font-size: 12px;
-}/*# sourceMappingURL=landingPage.module.css.map */
+}
+/*# sourceMappingURL=landingPage.module.css.map */

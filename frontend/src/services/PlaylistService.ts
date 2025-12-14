@@ -11,10 +11,30 @@ export const PlaylistService = {
     return res.data;
   },
 
-  async create(formData: FormData) {
-    const res = await api.post(`/api/playlists`, formData);
+  async create(input: { name: string; description?: string; imageFile?: File }) {
+    const token = localStorage.getItem("token");
+    
+    // Get current user to get hostId
+    const userStr = localStorage.getItem("user");
+    if (!userStr) throw new Error("Not authenticated");
+    const currentUser = JSON.parse(userStr);
+    
+    const formData = new FormData();
+    formData.append("name", input.name);
+    formData.append("hostId", currentUser.id.toString()); // Send hostId
+    if (input.description) formData.append("description", input.description);
+    if (input.imageFile) formData.append("CoverImage", input.imageFile);
+  
+    const res = await api.post("/api/playlists", formData, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+  
     return res.data;
   },
+
+ 
 
   async update(id: number, data: Partial<any>) {
     const res = await api.patch(`/api/playlists/${id}`, data);

@@ -1,4 +1,4 @@
-import "./Divider.scss";
+import "./divider.scss";
 
 interface DividerProps {
   type?: "horizontal" | "vertical"; // optional, default horizontal

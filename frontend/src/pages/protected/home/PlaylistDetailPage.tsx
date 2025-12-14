@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { PlaylistService } from "../../../services/PlaylistService";
 import { songService } from "../../../services/SongService";
-import { authService } from "../../../services/authService";
+// import { authService } from "../../../services/authService";
 import { useSpotifyPlayer } from "../../../context/SpotifyPlayerContext";
 import CollaboratorModal from "./components/CollaboratorModal";
 import type { PlaylistResponseDto } from "../../../types/PlaylistResponseDto";
@@ -42,7 +42,6 @@ export default function PlaylistDetailPage() {
 
   const [showCollaboratorModal, setShowCollaboratorModal] = useState(false);
 
-  const API_BASE = import.meta.env.VITE_API_URL;
 
   const Equalizer = () => (
     <div className="equalizer">
@@ -56,7 +55,7 @@ export default function PlaylistDetailPage() {
   const { play, pause, playerState, spotifyToken, deviceId } =
     useSpotifyPlayer();
 
-  const currentUser = authService.getUser();
+  // const currentUser = authService.getUser();
 
   useEffect(() => {
     loadPlaylist();
@@ -174,12 +173,14 @@ export default function PlaylistDetailPage() {
   };
 
   const getImageUrl = () => {
-    if (!playlist?.imageUrl)
-      return `https://picsum.photos/seed/${playlist?.id}/400`;
-    if (playlist.imageUrl.startsWith("http")) return playlist.imageUrl;
-    return `http://localhost:5000${
-      playlist.imageUrl.startsWith("/") ? "" : "/"
-    }${playlist.imageUrl}`;
+    console.log('playlist.imageUrl:', playlist?.imageUrl);
+    if (!playlist?.imageUrl) return `https://picsum.photos/seed/${playlist?.id}/400`;
+    if (playlist.imageUrl.startsWith('http')) return playlist.imageUrl;
+    
+   
+    const path = playlist.imageUrl.startsWith('/') ? playlist.imageUrl : `/${playlist.imageUrl}`;
+    console.log('Final image path:', path);
+    return path;
   };
 
   const formatDuration = (durationMs?: number, seconds?: number) => {

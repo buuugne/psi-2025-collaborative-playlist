@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Globe, Lock, Clock } from "lucide-react";
+import { Sparkles} from "lucide-react";
 import type { Playlist } from "../../../../types/Playlist";
 import { PlaylistService } from "../../../../services/PlaylistService";
 import { authService } from "../../../../services/authService";
@@ -38,13 +38,12 @@ export default function CreatePlaylistForm({ onPlaylistCreated, onCancel }: Crea
 
     setIsSubmitting(true);
     try {
-      const formData = new FormData();
-      formData.append("name", name.trim());
-      formData.append("hostId", currentUser.id.toString());
-      if (description.trim()) formData.append("description", description.trim());
-      if (imageFile) formData.append("CoverImage", imageFile);
 
-      const newPlaylist = await PlaylistService.create(formData);
+      const newPlaylist = await PlaylistService.create({
+        name: name.trim(),
+        description: description.trim() || undefined,
+        imageFile: imageFile || undefined
+      });
       
       console.log("Created playlist response:", newPlaylist);
       console.log("Image URL:", newPlaylist.imageUrl);

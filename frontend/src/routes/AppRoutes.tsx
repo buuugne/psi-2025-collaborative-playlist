@@ -7,7 +7,6 @@ import LoginPage from "../pages/public/login/loginPage";
 import RegisterPage from "../pages/public/register/registerPage";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { authService } from "../services/authService";
-import Temp from "../pages/protected/LiveSessions/LiveSessionsPage";
 import Settings from '../pages/public/settings/settingsPage';
 import HomePage from "../pages/protected/home/HomePage";
 import PlaylistDetailPage from "../pages/protected/home/PlaylistDetailPage";

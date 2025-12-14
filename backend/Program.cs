@@ -57,8 +57,8 @@ builder.Services.AddCors(options =>
             // Allow specific origin
             policy.WithOrigins(frontendUrl)
                   .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
+                  .AllowAnyMethod();
+                  //.AllowCredentials();
         }
     });
 });

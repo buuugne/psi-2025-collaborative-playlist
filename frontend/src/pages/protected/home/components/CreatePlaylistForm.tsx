@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Sparkles} from "lucide-react";
+import { useState, useEffect } from "react";
+import { Sparkles, Search, X, Users } from "lucide-react";
 import type { Playlist } from "../../../../types/Playlist";
 import { PlaylistService } from "../../../../services/PlaylistService";
 import { authService } from "../../../../services/authService";
@@ -10,16 +10,61 @@ interface CreatePlaylistFormProps {
   onCancel: () => void;
 }
 
+interface SearchResult {
+  id: number;
+  username: string;
+  profileImage?: string;
+}
+
 export default function CreatePlaylistForm({ onPlaylistCreated, onCancel }: CreatePlaylistFormProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [inviteEmail, setInviteEmail] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [invitedUsers, setInvitedUsers] = useState<SearchResult[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Search as user types
+  useEffect(() => {
+    const searchUsers = async () => {
+      if (searchQuery.trim().length === 0) {
+        setSearchResults([]);
+        return;
+      }
+
+      setIsSearching(true);
+      try {
+        const results = await PlaylistService.searchUsers(searchQuery.trim());
+        setSearchResults(results);
+      } catch (err) {
+        console.error("Search failed:", err);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(searchUsers, 300);
+    return () => clearTimeout(debounceTimer);
+  }, [searchQuery]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) setImageFile(file);
+  };
+
+  const handleAddUser = (user: SearchResult) => {
+    if (!invitedUsers.find((u) => u.id === user.id)) {
+      setInvitedUsers([...invitedUsers, user]);
+      setSearchQuery("");
+      setSearchResults([]);
+    }
+  };
+
+  const handleRemoveUser = (userId: number) => {
+    setInvitedUsers(invitedUsers.filter((u) => u.id !== userId));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,16 +83,24 @@ export default function CreatePlaylistForm({ onPlaylistCreated, onCancel }: Crea
 
     setIsSubmitting(true);
     try {
-
       const newPlaylist = await PlaylistService.create({
         name: name.trim(),
         description: description.trim() || undefined,
         imageFile: imageFile || undefined
       });
-      
+
+      // Add invited collaborators after playlist is created
+      for (const user of invitedUsers) {
+        try {
+          await PlaylistService.addCollaborator(newPlaylist.id, user.username);
+        } catch (err) {
+          console.error(`Failed to add collaborator ${user.username}:`, err);
+        }
+      }
+
       console.log("Created playlist response:", newPlaylist);
       console.log("Image URL:", newPlaylist.imageUrl);
-      
+
       onPlaylistCreated(newPlaylist);
     } catch (err) {
       console.error("Failed to create playlist:", err);
@@ -115,10 +168,10 @@ export default function CreatePlaylistForm({ onPlaylistCreated, onCancel }: Crea
         {imageFile && (
           <div className="create-playlist-form__file-preview">
             <p className="create-playlist-form__file-name">{imageFile.name}</p>
-            <img 
-              src={URL.createObjectURL(imageFile)} 
-              alt="Preview" 
-              style={{ maxWidth: '200px', maxHeight: '200px', marginTop: '8px', borderRadius: '4px' }}
+            <img
+              src={URL.createObjectURL(imageFile)}
+              alt="Preview"
+              className="create-playlist-form__image-preview"
             />
           </div>
         )}
@@ -129,27 +182,115 @@ export default function CreatePlaylistForm({ onPlaylistCreated, onCancel }: Crea
           <h3 className="create-playlist-form__section-title">Invite collaborators</h3>
           <p className="create-playlist-form__section-subtitle">You can add more later</p>
         </div>
-        <div className="create-playlist-form__invite">
-          <input
-            type="text"
-            className="create-playlist-form__input"
-            placeholder="Type a name or email..."
-            value={inviteEmail}
-            onChange={(e) => setInviteEmail(e.target.value)}
-          />
-          <button
-            type="button"
-            className="create-playlist-form__invite-button"
-            disabled={!inviteEmail.trim()}
-          >
-            Add
-          </button>
-        </div>
-        <p className="create-playlist-form__help-text">
-          Or share later with a link from the playlist header.
-        </p>
-      </div>
 
+        {/* Invited Users List */}
+        {invitedUsers.length > 0 && (
+          <div className="create-playlist-form__invited-list">
+            {invitedUsers.map((user) => (
+              <div key={user.id} className="create-playlist-form__invited-item">
+                {user.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt={user.username}
+                    className="create-playlist-form__invited-avatar"
+                  />
+                ) : (
+                  <div className="create-playlist-form__invited-avatar create-playlist-form__invited-avatar--placeholder">
+                    {user.username.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <span className="create-playlist-form__invited-username">
+                  {user.username}
+                </span>
+                <button
+                  type="button"
+                  className="create-playlist-form__remove-btn"
+                  onClick={() => handleRemoveUser(user.id)}
+                  aria-label={`Remove ${user.username}`}
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Search Input */}
+        <div className="create-playlist-form__search-wrapper">
+          <div className="create-playlist-form__input-container">
+            <Search size={16} className="create-playlist-form__search-icon" />
+            <input
+              type="text"
+              className="create-playlist-form__input create-playlist-form__input--search"
+              placeholder="Search users to invite..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          {/* Search Results Dropdown */}
+          {searchQuery.trim() && (
+            <div className="create-playlist-form__results">
+              {isSearching ? (
+                <div className="create-playlist-form__searching">
+                  <div className="create-playlist-form__spinner" />
+                  <span>Searching users...</span>
+                </div>
+              ) : searchResults.length > 0 ? (
+                <>
+                  {searchResults.map((user) => {
+                    const isAlreadyInvited = invitedUsers.some((u) => u.id === user.id);
+
+                    return (
+                      <button
+                        key={user.id}
+                        type="button"
+                        className="create-playlist-form__result-item"
+                        onClick={() => handleAddUser(user)}
+                        disabled={isAlreadyInvited}
+                      >
+                        {user.profileImage ? (
+                          <img
+                            src={user.profileImage}
+                            alt={user.username}
+                            className="create-playlist-form__result-avatar"
+                          />
+                        ) : (
+                          <div className="create-playlist-form__result-avatar">
+                            {user.username.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <div className="create-playlist-form__result-info">
+                          <div className="create-playlist-form__result-username">
+                            {user.username}
+                          </div>
+                          {isAlreadyInvited && (
+                            <div className="create-playlist-form__result-hint">
+                              Already invited
+                            </div>
+                          )}
+                        </div>
+                        {!isAlreadyInvited && (
+                          <span className="create-playlist-form__add-icon">+</span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </>
+              ) : (
+                <div className="create-playlist-form__no-results">
+                  <Users size={24} />
+                  <p>No users found</p>
+                  <p className="create-playlist-form__no-results-hint">
+                    Try a different username
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+      </div>
 
       <div className="create-playlist-form__actions">
         <button

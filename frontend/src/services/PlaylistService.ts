@@ -61,4 +61,9 @@ export const PlaylistService = {
     const res = await api.get(`/api/users/search`, { params: { q: query } });
     return res.data ?? [];
   },
+
+  async getCollaborators(playlistId: number): Promise<any[]> {
+    const response = await api.get(`api/playlists/${playlistId}/collaborators`);
+    return response.data;
+  },
 };

@@ -53,7 +53,6 @@ export default function PlaylistDetailPage() {
   // Spotify player integration
   const { play, pause, playerState, spotifyToken, deviceId } = useSpotifyPlayer();
 
-
   const currentUser = authService.getUser();
   const isHost = currentUser && playlist && playlist.host?.id === currentUser.id;
 

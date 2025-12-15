@@ -11,7 +11,12 @@ import Settings from '../pages/public/settings/settingsPage';
 import HomePage from "../pages/protected/home/HomePage";
 import PlaylistDetailPage from "../pages/protected/home/PlaylistDetailPage";
 import PlaylistsPage from "../pages/protected/playlistsPage/playlistsPage";
+<<<<<<< HEAD
 
+=======
+import LiveSessionsPage from "../pages/protected/LiveSessions/LiveSessionsPage";
+import SpotifyCallback from "../pages/public/SpotifyCallback";
+>>>>>>> 79293f2a199ce771b0d7d86a8392fcecf4b13b4f
 
 export default function AppRoutes() {
   const navigate = useNavigate();
@@ -43,6 +48,11 @@ export default function AppRoutes() {
         <Route
           path="/register"
           element={isAuthenticated ? <Navigate to="/home" /> : <RegisterPage />}
+        />
+
+         <Route
+          path="/spotify-callback"
+          element={<SpotifyCallback />}
         />
 
         {/* Protected routes */}

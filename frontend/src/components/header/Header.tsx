@@ -20,7 +20,6 @@ export default function Header({ isAuthenticated, username, onLogout }: HeaderPr
     { to: "/home", label: "Home" },
     { to: "/playlists", label: "Playlists" },
     { to: "/settings", label: "Settings" },
-    { to: "/live-sessions", label: "Live Sessions" },
   ];
 
   const links = isAuthenticated ? privateLinks : publicLinks;

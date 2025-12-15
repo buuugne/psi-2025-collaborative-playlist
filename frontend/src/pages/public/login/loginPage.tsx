@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LogIn } from "lucide-react";
-import styles from "./loginPage.module.css";
+import "./loginPage.scss";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../../../services/authService";
 
@@ -28,7 +28,6 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -48,46 +47,48 @@ const LoginPage = () => {
   };
 
   return (
-    <div className={styles.loginPage}>
-      <div className={styles.loginBox}>
-        <h1 className={styles.header}>Welcome Back!</h1>
-        <p className={styles.text}>Sign in to continue creating and collaborating on playlists.</p>
+    <div className="login-page">
+      <div className="login-page__box">
+        <h1 className="login-page__header">Welcome Back!</h1>
+        <p className="login-page__text">Sign in to continue creating and collaborating on playlists.</p>
 
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <label>Username</label>
+        <form className="login-page__form" onSubmit={handleSubmit}>
+          <div className="login-page__form-group">
+            <label className="login-page__label">Username</label>
             <input
+              className="login-page__input"
               name="username"
               value={values.username}
               onChange={handleChange}
               placeholder="Enter your username"
             />
-            {errors.username && <p className={styles.error}>{errors.username}</p>}
+            {errors.username && <p className="login-page__error">{errors.username}</p>}
           </div>
 
-          <div className={styles.formGroup}>
-            <label>Password</label>
+          <div className="login-page__form-group">
+            <label className="login-page__label">Password</label>
             <input
+              className="login-page__input"
               name="password"
               type="password"
               value={values.password}
               onChange={handleChange}
               placeholder="Enter your password"
             />
-            {errors.password && <p className={styles.error}>{errors.password}</p>}
+            {errors.password && <p className="login-page__error">{errors.password}</p>}
           </div>
 
-          <button className={styles.signInBtn} type="submit">
-            <LogIn className={styles.icon} strokeWidth={2} size={18} />
+          <button className="login-page__sign-in-btn" type="submit">
+            <LogIn className="login-page__icon" strokeWidth={2} size={18} />
             Log In
           </button>
         </form>
 
-        {message && <p className={styles.message}>{message}</p>}
-        {errors.general && <p className={styles.error}>{errors.general}</p>}
+        {message && <p className="login-page__message">{message}</p>}
+        {errors.general && <p className="login-page__error">{errors.general}</p>}
 
-        <p className={styles.signupText}>
-          <span className={styles.grey}>Don’t have an account? </span>
+        <p className="login-page__signup-text">
+          <span className="login-page__grey">Don't have an account? </span>
           <Link to="/register">Sign up</Link>
         </p>
       </div>

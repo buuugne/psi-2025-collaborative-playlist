@@ -3,11 +3,8 @@ import { Upload } from 'lucide-react';
 import { UserService } from '../../../services/UserService';
 import './settingsPage.scss';
 
-<<<<<<< HEAD
-=======
 // For local dev with proxy, we can use relative URLs
 // For production, use the full URL
->>>>>>> c1093bd (fixed settings issue)
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
 interface User {
@@ -72,23 +69,14 @@ export default function Settings() {
       alert('Profile image updated successfully!');
       
     } catch (err: any) {
-<<<<<<< HEAD
-      alert(err?.response?.data || 'Failed to update profile image');
-      console.error(err);
-=======
       console.error('❌ Upload error:', err);
       alert(err?.response?.data || 'Failed to update profile image');
->>>>>>> c1093bd (fixed settings issue)
     } finally {
       setLoading(false);
     }
   };
 
   const getProfileImageUrl = () => {
-<<<<<<< HEAD
-    if (preview) return preview;
-    if (user?.profileImage) return `${API_BASE}${user.profileImage}?t=${imageKey}`;
-=======
     if (preview) {
       return preview;
     }
@@ -101,7 +89,6 @@ export default function Settings() {
       return imageUrl;
     }
     
->>>>>>> c1093bd (fixed settings issue)
     return `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'User'}`;
   };
 
@@ -122,13 +109,9 @@ export default function Settings() {
             src={getProfileImageUrl()}
             alt="Profile"
             className="settings-page__profile-image"
-<<<<<<< HEAD
-            onError={(e) => {
-=======
             onLoad={() => console.log('✅ Image loaded successfully')}
             onError={(e) => {
               console.error('❌ Image failed to load:', getProfileImageUrl());
->>>>>>> c1093bd (fixed settings issue)
               e.currentTarget.src = `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'User'}`;
             }}
           />

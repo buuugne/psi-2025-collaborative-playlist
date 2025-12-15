@@ -32,7 +32,6 @@
       }
     }
   
-
     &__nav {
       display: flex;
       gap: 15px;
@@ -49,13 +48,12 @@
       }
     }
   
-
     &__right {
       display: flex;
       align-items: center;
+      gap: 15px;
   
       & .header__username {
-        margin-right: 20px;
         font-size: 16px;
         color: $foreground-secondary;
       }
@@ -75,5 +73,40 @@
         }
       }
     }
+}
+
+// Spotify Button Styles
+.spotify-btn {
+  padding: 5px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &--connected {
+    background: #1db954;
+    color: #fff;
+
+    &:hover {
+      background: #1ed760;
+    }
   }
-  
+
+  &--disconnected {
+    background: rgba($accent-primary, 0.2);
+    color: $accent-primary;
+    border: 1px solid $accent-primary;
+
+    &:hover {
+      background: rgba($accent-primary, 0.3);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}

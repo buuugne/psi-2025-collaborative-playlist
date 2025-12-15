@@ -12,7 +12,7 @@ import SpotifyLogin from "./components/SpotifyLogin";
 function App() {
   return (
     <SpotifyPlayerProvider>
-      <SpotifyLogin />
+      <SpotifyLogin hidden={true}/>
       <Router>
         <AppRoutes />
       </Router>

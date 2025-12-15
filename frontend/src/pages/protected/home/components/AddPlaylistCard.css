@@ -1,0 +1,47 @@
+.add-playlist-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(29, 185, 84, 0.3);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.add-playlist-card:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(29, 185, 84, 0.5);
+}
+.add-playlist-card__title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #e6eef8;
+  margin: 0 0 12px 0;
+}
+.add-playlist-card__description {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: rgba(230, 238, 248, 0.7);
+  margin: 0 0 24px 0;
+}
+.add-playlist-card__button {
+  background-color: #1db954;
+  color: #0f1724;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.add-playlist-card__button:hover {
+  background-color: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+}
+.add-playlist-card__button:active {
+  transform: translateY(0);
+}/*# sourceMappingURL=AddPlaylistCard.css.map */

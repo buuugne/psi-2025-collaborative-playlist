@@ -1,0 +1,173 @@
+.song-search {
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.song-search__controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.song-search__select, .song-search__input {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #e6eef8;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+.song-search__select:focus, .song-search__input:focus {
+  outline: none;
+  border-color: #1db954;
+  box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.1);
+}
+.song-search__select:hover, .song-search__input:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.song-search__select {
+  min-width: 200px;
+  cursor: pointer;
+}
+.song-search__input {
+  flex: 1;
+}
+.song-search__input::-moz-placeholder {
+  color: rgba(230, 238, 248, 0.4);
+}
+.song-search__input::placeholder {
+  color: rgba(230, 238, 248, 0.4);
+}
+.song-search__search-button {
+  background-color: #1db954;
+  height: 100%;
+  color: #0f1724;
+  padding: 10px 20px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+.song-search__search-button:hover:not(:disabled) {
+  background-color: #16a34a;
+  transform: translateY(-1px);
+}
+.song-search__search-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+.song-search__search-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.song-search__results {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  max-height: 500px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.song-search__results::-webkit-scrollbar {
+  width: 8px;
+}
+.song-search__results::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+.song-search__results::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+.song-search__results::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.song-search__result {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background-color 0.2s ease;
+}
+.song-search__result:last-child {
+  border-bottom: none;
+}
+.song-search__result:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.song-search__result-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.song-search__track-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #e6eef8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.song-search__track-artists {
+  font-size: 0.875rem;
+  color: #cfeaf3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.song-search__track-album {
+  font-size: 0.875rem;
+  color: rgba(230, 238, 248, 0.6);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.song-search__spotify-link {
+  font-size: 0.875rem;
+  color: #1db954;
+  text-decoration: none;
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+.song-search__spotify-link:hover {
+  color: #16a34a;
+  text-decoration: underline;
+}
+.song-search__add-button {
+  background-color: #1db954;
+  color: #0f1724;
+  padding: 8px 20px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+.song-search__add-button:hover {
+  background-color: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+}
+.song-search__add-button:active {
+  transform: translateY(0);
+}
+.song-search__no-results {
+  color: rgba(230, 238, 248, 0.6);
+  text-align: center;
+  padding: 32px;
+  font-size: 1rem;
+}/*# sourceMappingURL=SongSearch.css.map */

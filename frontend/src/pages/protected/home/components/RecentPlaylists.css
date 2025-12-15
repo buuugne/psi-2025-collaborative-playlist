@@ -1,0 +1,36 @@
+.recent-playlists {
+  margin-bottom: 48px;
+}
+.recent-playlists__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+.recent-playlists__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e6eef8;
+  margin: 0 0 8px 0;
+}
+.recent-playlists__subtitle {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: rgba(230, 238, 248, 0.6);
+  margin: 0;
+}
+.recent-playlists__view-all {
+  color: #1db954;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+.recent-playlists__view-all:hover {
+  color: #16a34a;
+}
+.recent-playlists__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}/*# sourceMappingURL=RecentPlaylists.css.map */

@@ -317,10 +317,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
+                "spotify123",
                 "New Song",
-                "New Album",
                 180,
-                artistNames
+                artistNames,
+                "http://image.url",
+                "http://preview.url"
             );
 
             // --- ASSERT ---
@@ -360,10 +362,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
+                "spotify_existing",
                 "Existing Song",
-                "Existing Album",
                 200,
-                new List<string> { "New Artist" }
+                new List<string> { "New Artist" },
+                "img",
+                "prev"
             );
 
             // --- ASSERT ---
@@ -392,11 +396,14 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
+                "spotify_reuse",
                 "Song Title",
-                "Album",
                 180,
-                artistNames
+                artistNames,
+                "img",
+                "prev"
             );
+
 
             // --- ASSERT ---
             Assert.NotNull(result);
@@ -420,10 +427,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
+                "spotify_dupes",
                 "Test Song",
-                "Test Album",
                 180,
-                artistNames
+                artistNames,
+                "img",
+                "prev"
             );
 
             // --- ASSERT ---
@@ -445,11 +454,13 @@ namespace TestProject
             var artistNames = new List<string> { "Valid Artist", "", "  ", null! };
 
             // --- ACT ---
-            var result = await repo.EnsureSongWithArtistsAsync(
-                "Test Song",
-                "Test Album",
-                180,
-                artistNames
+                var result = await repo.EnsureSongWithArtistsAsync(
+                    "spotify_test_5",
+                    "Test Song",
+                    180,
+                    artistNames,
+                    "img",
+                    "prev"
             );
 
             // --- ASSERT ---
@@ -470,10 +481,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
-                "Test Song",
-                "Test Album",
+                "spotify123",
+                "New Song",
                 180,
-                artistNames
+                artistNames,
+                "http://image.url",
+                "http://preview.url"
             );
 
             // --- ASSERT ---
@@ -496,10 +509,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
-                "Song Without Duration",
-                "Album",
+                "spotify_existing_1",
+                "Existing Song",
                 null,
-                artistNames
+                new List<string> { "New Artist" },
+                "img",
+                "prev"
             );
 
             // --- ASSERT ---

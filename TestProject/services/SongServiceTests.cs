@@ -22,10 +22,8 @@ namespace TestProject
             var id = 42;
             mockSongRepo.Setup(x => x.GetByIdAsync(id)).ReturnsAsync((Song?)null);
 
-            var service = new SongService(
-                mockSongRepo.Object,
-                mockPlaylistRepo.Object
-            );
+            var mockSpotifyService = new Mock<ISpotifyService>();
+            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object, mockSpotifyService.Object);
 
             // --- ACT ---
             var (success, error) = await service.DeleteAsync(id);
@@ -59,7 +57,8 @@ namespace TestProject
             mockSongRepo.Setup(x => x.DeleteAsync(It.IsAny<Song>()))
                 .Returns(Task.CompletedTask);
 
-            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object);
+            var mockSpotifyService = new Mock<ISpotifyService>();
+            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object, mockSpotifyService.Object);
 
             // --- ACT ---
             var (success, error) = await service.DeleteAsync(id);
@@ -111,10 +110,12 @@ namespace TestProject
 
             // Mock: EnsureSongWithArtistsAsync returns the existing song
             mockSongRepo.Setup(x => x.EnsureSongWithArtistsAsync(
-                    It.IsAny<string>(),  // title
-                    It.IsAny<string>(),  // album
-                    It.IsAny<int?>(),    // durationSeconds
-                    It.IsAny<List<string>>() // artistNames
+                    It.IsAny<string>(),       // spotifyId
+                    It.IsAny<string>(),       // title
+                    It.IsAny<int?>(),         // durationSeconds
+                    It.IsAny<List<string>>(), // artistNames
+                    It.IsAny<string>(),       // imageUrl
+                    It.IsAny<string>()        // previewUrl
                 ))
                 .ReturnsAsync(new Song
                 {
@@ -124,10 +125,8 @@ namespace TestProject
                     Artists = new List<Artist>()
                 });
 
-            var service = new SongService(
-                mockSongRepo.Object,
-                mockPlaylistRepo.Object
-            );
+            var mockSpotifyService = new Mock<ISpotifyService>();
+            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object, mockSpotifyService.Object);
 
             var dto = new AddSongToPlaylistDto
             {
@@ -185,7 +184,8 @@ namespace TestProject
 
             mockSongRepo.Setup(x => x.GetAllAsync()).ReturnsAsync(songs);
 
-            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object);
+            var mockSpotifyService = new Mock<ISpotifyService>();
+            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object, mockSpotifyService.Object);
 
             // --- ACT ---
             var result = await service.GetAllAsync();
@@ -217,7 +217,8 @@ namespace TestProject
                     }
                 });
 
-            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object);
+            var mockSpotifyService = new Mock<ISpotifyService>();
+            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object, mockSpotifyService.Object);
 
             // --- ACT ---
             var result = await service.GetByIdAsync(id);
@@ -240,7 +241,8 @@ namespace TestProject
             mockSongRepo.Setup(x => x.GetByIdAsync(id))
                 .ReturnsAsync((Song?)null);
 
-            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object);
+            var mockSpotifyService = new Mock<ISpotifyService>();
+            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object, mockSpotifyService.Object);
 
             // --- ACT ---
             var result = await service.GetByIdAsync(id);
@@ -260,7 +262,8 @@ namespace TestProject
             mockPlaylistRepo.Setup(x => x.GetByIdWithDetailsAsync(playlistId))
                 .ReturnsAsync((Playlist?)null);
 
-            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object);
+            var mockSpotifyService = new Mock<ISpotifyService>();
+            var service = new SongService(mockSongRepo.Object, mockPlaylistRepo.Object, mockSpotifyService.Object);
 
             var dto = new AddSongToPlaylistDto
             {

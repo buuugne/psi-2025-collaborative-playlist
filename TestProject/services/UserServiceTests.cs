@@ -1,6 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
+//using Microsoft.AspNetCore.Http.Internal;
 using Moq;
 using Xunit;
 using MyApi.Services;
@@ -26,8 +26,8 @@ namespace TestProject.services
             // Arrange
             var users = new List<User>
             {
-                new User { Id = 1, Username = "a", Role = UserRole.User, ProfileImage = "/profiles/a.png" },
-                new User { Id = 2, Username = "b", Role = UserRole.Admin, ProfileImage = null }
+                new User { Id = 1, Username = "a", Role = UserRole.Host, ProfileImage = "/profiles/a.png" },
+                new User { Id = 2, Username = "b", Role = UserRole.Host, ProfileImage = null }
             };
 
             _repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(users);
@@ -39,7 +39,7 @@ namespace TestProject.services
             Assert.Equal(2, result.Count);
             Assert.Equal(1, result[0].Id);
             Assert.Equal("a", result[0].Username);
-            Assert.Equal(UserRole.User, result[0].Role);
+            Assert.Equal(UserRole.Host, result[0].Role);
             Assert.Equal("/profiles/a.png", result[0].ProfileImage);
 
             _repoMock.VerifyAll();
@@ -59,7 +59,7 @@ namespace TestProject.services
         [Fact]
         public async Task GetByIdAsync_WhenUserFound_ReturnsDto()
         {
-            var user = new User { Id = 5, Username = "john", Role = UserRole.User, ProfileImage = "/profiles/x.png" };
+            var user = new User { Id = 5, Username = "john", Role = UserRole.Host, ProfileImage = "/profiles/x.png" };
             _repoMock.Setup(r => r.GetByIdAsync(5)).ReturnsAsync(user);
 
             var result = await _sut.GetByIdAsync(5);
@@ -67,7 +67,7 @@ namespace TestProject.services
             Assert.NotNull(result);
             Assert.Equal(5, result!.Id);
             Assert.Equal("john", result.Username);
-            Assert.Equal(UserRole.User, result.Role);
+            Assert.Equal(UserRole.Host, result.Role);
 
             _repoMock.VerifyAll();
         }
@@ -88,7 +88,7 @@ namespace TestProject.services
         [Fact]
         public async Task DeleteAsync_WhenUserFound_DeletesAndReturnsTrue()
         {
-            var user = new User { Id = 9, Username = "del", Role = UserRole.User };
+            var user = new User { Id = 9, Username = "del", Role = UserRole.Host };
             _repoMock.Setup(r => r.GetByIdAsync(9)).ReturnsAsync(user);
             _repoMock.Setup(r => r.DeleteAsync(user)).Returns(Task.CompletedTask);
 
@@ -105,7 +105,7 @@ namespace TestProject.services
         {
             _repoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync((User?)null);
 
-            var (success, error) = await _sut.ChangeRoleAsync(1, UserRole.Admin);
+            var (success, error) = await _sut.ChangeRoleAsync(1, UserRole.Host);
 
             Assert.False(success);
             Assert.Equal("User not found", error);
@@ -116,16 +116,16 @@ namespace TestProject.services
         [Fact]
         public async Task ChangeRoleAsync_WhenUserFound_UpdatesRole()
         {
-            var user = new User { Id = 1, Username = "u", Role = UserRole.User };
+            var user = new User { Id = 1, Username = "u", Role = UserRole.Host };
             _repoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(user);
-            _repoMock.Setup(r => r.UpdateAsync(It.Is<User>(x => x.Id == 1 && x.Role == UserRole.Admin)))
+            _repoMock.Setup(r => r.UpdateAsync(It.Is<User>(x => x.Id == 1 && x.Role == UserRole.Host)))
                      .Returns(Task.CompletedTask);
 
-            var (success, error) = await _sut.ChangeRoleAsync(1, UserRole.Admin);
+            var (success, error) = await _sut.ChangeRoleAsync(1, UserRole.Host);
 
             Assert.True(success);
             Assert.Null(error);
-            Assert.Equal(UserRole.Admin, user.Role);
+            Assert.Equal(UserRole.Host, user.Role);
 
             _repoMock.VerifyAll();
         }
@@ -148,8 +148,8 @@ namespace TestProject.services
         {
             var users = new List<User>
             {
-                new User { Id = 1, Username = "marius", Role = UserRole.User },
-                new User { Id = 2, Username = "mari", Role = UserRole.Admin }
+                new User { Id = 1, Username = "marius", Role = UserRole.Host },
+                new User { Id = 2, Username = "mari", Role = UserRole.Host }
             };
 
             _repoMock.Setup(r => r.SearchByUsernameAsync("mar", 10)).ReturnsAsync(users);
@@ -191,7 +191,7 @@ namespace TestProject.services
         [Fact]
         public async Task UpdateProfileImageAsync_WhenInvalidExtension_Throws()
         {
-            var user = new User { Id = 1, Username = "u", Role = UserRole.User };
+            var user = new User { Id = 1, Username = "u", Role = UserRole.Host };
             _repoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(user);
 
             var file = CreateFormFile("bad.exe", "fake");
@@ -205,7 +205,7 @@ namespace TestProject.services
         [Fact]
         public async Task UpdateProfileImageAsync_WhenTooLarge_Throws()
         {
-            var user = new User { Id = 1, Username = "u", Role = UserRole.User };
+            var user = new User { Id = 1, Username = "u", Role = UserRole.Host };
             _repoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(user);
 
             var file = CreateFormFile("photo.png", new string('a', 6 * 1024 * 1024)); // > 5MB
@@ -219,7 +219,7 @@ namespace TestProject.services
         [Fact]
         public async Task UpdateProfileImageAsync_WhenRepoUpdateFails_Throws()
         {
-            var user = new User { Id = 1, Username = "u", Role = UserRole.User };
+            var user = new User { Id = 1, Username = "u", Role = UserRole.Host };
             _repoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(user);
             _repoMock.Setup(r => r.UpdateProfileImageAsync(1, It.IsAny<string>())).ReturnsAsync(false);
 
@@ -234,7 +234,7 @@ namespace TestProject.services
         [Fact]
         public async Task UpdateProfileImageAsync_WhenOk_UpdatesAndReturnsDto()
         {
-            var user = new User { Id = 1, Username = "u", Role = UserRole.User };
+            var user = new User { Id = 1, Username = "u", Role = UserRole.Host };
             _repoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(user);
             _repoMock.Setup(r => r.UpdateProfileImageAsync(1, It.IsAny<string>())).ReturnsAsync(true);
 

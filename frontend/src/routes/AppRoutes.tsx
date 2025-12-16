@@ -46,11 +46,6 @@ export default function AppRoutes() {
           element={isAuthenticated ? <Navigate to="/home" /> : <RegisterPage />}
         />
 
-         <Route
-          path="/spotify-callback"
-          element={<SpotifyCallback />}
-        />
-
         {/* Protected routes */}
         <Route
           path="/home"

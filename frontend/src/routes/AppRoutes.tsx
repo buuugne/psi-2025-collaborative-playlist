@@ -44,8 +44,6 @@ export default function AppRoutes() {
           element={isAuthenticated ? <Navigate to="/home" /> : <RegisterPage />}
         />
 
-       
-
         {/* Protected routes */}
         <Route
           path="/home"

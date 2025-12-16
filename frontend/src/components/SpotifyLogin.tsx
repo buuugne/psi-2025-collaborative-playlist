@@ -1,8 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSpotifyPlayer } from "../context/SpotifyPlayerContext";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
-
+import { API_BASE } from "../config/api";
 
 interface SpotifyLoginProps {
   hidden?: boolean;
@@ -13,45 +11,43 @@ export default function SpotifyLogin({ hidden }: SpotifyLoginProps) {
   const [isLoading, setIsLoading] = useState(false);
   const hasProcessedCallback = useRef(false);
 
-  
-
+  // ✅ HANDLE SPOTIFY CALLBACK HERE — ONLY HERE
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
 
-    if (code && !hasProcessedCallback.current) {
-      hasProcessedCallback.current = true;
-      handleCallback(code);
-    }
+    if (!code || hasProcessedCallback.current) return;
+
+    hasProcessedCallback.current = true;
+    handleCallback(code);
   }, []);
 
   const handleCallback = async (code: string) => {
     setIsLoading(true);
+
     try {
-      const response = await fetch(`${API_BASE}/api/SpotifyAuth/callback`, {
+      const res = await fetch(`${API_BASE}/api/SpotifyAuth/callback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code }),
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to get access token");
-      }
+      if (!res.ok) throw new Error("Spotify auth failed");
 
-      const data = await response.json();
-      
+      const data = await res.json();
+
       localStorage.setItem("spotifyToken", data.accessToken);
       if (data.refreshToken) {
         localStorage.setItem("spotifyRefreshToken", data.refreshToken);
       }
-      
+
       setSpotifyToken(data.accessToken);
-      window.location.href = '/home';
-    } catch (error) {
-      console.error("Authentication failed:", error);
-      alert(`Failed to authenticate with Spotify: ${error}`);
-      window.history.replaceState({}, document.title, window.location.pathname);
+
+      // ✅ clean URL
+      window.history.replaceState({}, document.title, "/home");
+    } catch (err) {
+      console.error(err);
+      alert("Spotify authentication failed");
     } finally {
       setIsLoading(false);
     }
@@ -59,52 +55,28 @@ export default function SpotifyLogin({ hidden }: SpotifyLoginProps) {
 
   const handleLogin = async () => {
     setIsLoading(true);
+
     try {
-      const response = await fetch(`${API_BASE}/api/SpotifyAuth/login-url`);
-      const data = await response.json();
+      const res = await fetch(`${API_BASE}/api/SpotifyAuth/login-url`);
+      const data = await res.json();
       window.location.href = data.url;
-    } catch (error) {
-      console.error("Failed to get login URL:", error);
+    } catch {
       alert("Failed to start Spotify login");
       setIsLoading(false);
     }
   };
 
+  // restore token on reload
   useEffect(() => {
-    const savedToken = localStorage.getItem("spotifyToken");
-    if (savedToken && !spotifyToken) {
-      setSpotifyToken(savedToken);
-    }
+    const saved = localStorage.getItem("spotifyToken");
+    if (saved && !spotifyToken) setSpotifyToken(saved);
   }, [spotifyToken, setSpotifyToken]);
-
-  const handleLogout = () => {
-    localStorage.removeItem('spotifyToken');
-    localStorage.removeItem('spotifyRefreshToken');
-    setSpotifyToken(null);
-  };
 
   if (hidden) return null;
 
-  if (spotifyToken) {
-    return (
-      <button
-        onClick={handleLogout}
-        className="spotify-btn spotify-btn--connected"
-        title="Disconnect Spotify"
-      >
-        🎵 Connected
-      </button>
-    );
-  }
-
   return (
-    <button
-      onClick={handleLogin}
-      disabled={isLoading}
-      className="spotify-btn spotify-btn--disconnected"
-      title="Connect to Spotify"
-    >
-      {isLoading ? "..." : "🎵 Connect"}
+    <button onClick={handleLogin} disabled={isLoading}>
+      {spotifyToken ? "🎵 Connected" : "🎵 Connect"}
     </button>
   );
 }

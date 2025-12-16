@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import type { Song } from "../types/Song";
+import { API_BASE } from "../config/api";
 
 interface PlayerState {
   isPlaying: boolean;
@@ -63,29 +64,29 @@ export const SpotifyPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!spotifyToken) return;
 
     const refreshToken = async () => {
-      const refreshTokenValue = localStorage.getItem('spotifyRefreshToken');
+      const refreshTokenValue = localStorage.getItem("spotifyRefreshToken");
       if (!refreshTokenValue) return;
 
       try {
-        const response = await fetch('http://localhost:5000/api/SpotifyAuth/refresh', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refreshToken: refreshTokenValue })
+        const response = await fetch(`${API_BASE}/api/SpotifyAuth/refresh`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken: refreshTokenValue }),
         });
 
         if (response.ok) {
           const data = await response.json();
-          localStorage.setItem('spotifyToken', data.accessToken);
+          localStorage.setItem("spotifyToken", data.accessToken);
           setSpotifyTokenState(data.accessToken);
-          console.log('✅ Token refreshed automatically');
+          console.log("✅ Token refreshed automatically");
         } else {
-          console.error('Failed to refresh token');
-          localStorage.removeItem('spotifyToken');
-          localStorage.removeItem('spotifyRefreshToken');
+          console.error("Failed to refresh token");
+          localStorage.removeItem("spotifyToken");
+          localStorage.removeItem("spotifyRefreshToken");
           setSpotifyTokenState(null);
         }
       } catch (error) {
-        console.error('Error refreshing token:', error);
+        console.error("Error refreshing token:", error);
       }
     };
 
@@ -187,29 +188,32 @@ export const SpotifyPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
 
         // If token expired (401), try to refresh
         if (response.status === 401) {
-          console.log('Token expired, attempting refresh...');
-          const refreshTokenValue = localStorage.getItem('spotifyRefreshToken');
-          
+          console.log("Token expired, attempting refresh...");
+          const refreshTokenValue = localStorage.getItem("spotifyRefreshToken");
+
           if (refreshTokenValue) {
-            const refreshResponse = await fetch('http://localhost:5000/api/SpotifyAuth/refresh', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ refreshToken: refreshTokenValue })
-            });
+            const refreshResponse = await fetch(
+              "http://localhost:5000/api/SpotifyAuth/refresh",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ refreshToken: refreshTokenValue }),
+              }
+            );
 
             if (refreshResponse.ok) {
               const data = await refreshResponse.json();
-              localStorage.setItem('spotifyToken', data.accessToken);
+              localStorage.setItem("spotifyToken", data.accessToken);
               setSpotifyTokenState(data.accessToken);
               return;
             }
           }
-          
+
           // Refresh failed, force re-login
-          localStorage.removeItem('spotifyToken');
-          localStorage.removeItem('spotifyRefreshToken');
+          localStorage.removeItem("spotifyToken");
+          localStorage.removeItem("spotifyRefreshToken");
           setSpotifyTokenState(null);
-          alert('Session expired. Please log in again.');
+          alert("Session expired. Please log in again.");
         }
 
         setPlayerState((prev) => ({
@@ -217,7 +221,7 @@ export const SpotifyPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
           currentTrackUri: uri,
         }));
       } catch (error) {
-        console.error('Error playing track:', error);
+        console.error("Error playing track:", error);
       }
     },
     [spotifyToken, deviceId]

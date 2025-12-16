@@ -570,37 +570,35 @@ export default function PlaylistDetailPage() {
                     {song.durationFormatted || formatDuration(undefined, song.duration)}
                   </div>
 
-                  <div className="playlist-detail-page__track-actions">
-                    <button
-                      type="button"
-                      onClick={() => handlePlaySong(song.spotifyUri)}
-                      className="playlist-detail-page__track-play"
-                      disabled={!hasValidUri}
-                      title={
-                        hasValidUri
-                          ? isPlaying && playerState.isPlaying
-                            ? "Pause"
-                            : "Play"
-                          : "No Spotify URI"
-                      }
-                    >
-                      {isPlaying && playerState.isPlaying ? (
-                        <Pause size={18} />
-                      ) : (
-                        <Play size={18} />
-                      )}
-                    </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePlaySong(song.spotifyUri)}
+                    className="playlist-detail-page__track-play"
+                    disabled={!hasValidUri}
+                    title={
+                      hasValidUri
+                        ? isPlaying && playerState.isPlaying
+                          ? "Pause"
+                          : "Play"
+                        : "No Spotify URI"
+                    }
+                  >
+                    {isPlaying && playerState.isPlaying ? (
+                      <Pause size={18} />
+                    ) : (
+                      <Play size={18} />
+                    )}
+                  </button>
 
-                    <button
-                      type="button"
-                      className="playlist-detail-page__track-delete"
-                      onClick={() => handleRemoveSong(song.id)}
-                      aria-label="Remove song"
-                      title="Remove song"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    className="playlist-detail-page__track-delete"
+                    onClick={() => handleRemoveSong(song.id)}
+                    aria-label="Remove song"
+                    title="Remove song"
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               );
             })}

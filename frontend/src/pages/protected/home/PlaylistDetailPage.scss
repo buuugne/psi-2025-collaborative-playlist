@@ -620,7 +620,7 @@
 
   &__tracklist-header {
     display: grid;
-    grid-template-columns: 50px 2fr 1.5fr 1.5fr 120px 100px 50px;
+    grid-template-columns: 50px 2fr 1.5fr 1.5fr 120px 100px 100px 100px;
     gap: 1rem;
     padding: 1rem 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -659,7 +659,7 @@
 
   &__track {
     display: grid;
-    grid-template-columns: 50px 2fr 1.5fr 1.5fr 120px 100px 50px;
+    grid-template-columns: 50px 2fr 1.5fr 1.5fr 120px 100px 100px 100px;
     gap: 1rem;
     padding: 0.75rem 1.5rem;
     align-items: center;
@@ -733,6 +733,39 @@
     color: #b3b3b3;
   }
 
+  &__track-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    justify-content: center;
+  }
+
+  &__track-play {
+    background: transparent;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: all .2s;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
   &__track-delete {
     display: flex;
     align-items: center;
@@ -741,15 +774,23 @@
     border: none;
     color: #b3b3b3;
     cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 6px;
+    padding: 4px;
+    border-radius: 4px;
     transition: all 0.2s;
     opacity: 0;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
 
     &:hover {
       color: #ff4444;
       background: rgba(255, 68, 68, 0.1);
       transform: scale(1.1);
+    }
+
+    svg {
+      width: 14px;
+      height: 14px;
     }
   }
 
@@ -784,7 +825,7 @@
   .playlist-detail-page {
     &__tracklist-header,
     &__track {
-      grid-template-columns: 40px 2fr 1.5fr 1fr 80px 80px 40px;
+      grid-template-columns: 40px 2fr 1.5fr 1fr 80px 80px 90px;
     }
 
     &__track-album {
@@ -855,10 +896,13 @@
       font-size: 0.813rem;
     }
 
-    &__track-delete {
+    &__track-actions {
       grid-column: 2 / 3;
       grid-row: 2 / 3;
-      opacity: 1;
+      
+      .playlist-detail-page__track-delete {
+        opacity: 1;
+      }
     }
 
     &__title-input {
@@ -910,21 +954,6 @@
   background: rgba(29, 185, 84, 0.1);
   border-left: 3px solid #1db954;
   transition: background 0.25s ease;
-}
-
-.playlist-detail-page__track-play {
-  background: transparent;
-  border: none;
-  color: #b3b3b3;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 50%;
-  transition: all .2s;
-
-  &:hover {
-    color: #fff;
-    background: rgba(255,255,255,0.1);
-  }
 }
 
 .playlist-detail-page__track--playing .playlist-detail-page__track-play {

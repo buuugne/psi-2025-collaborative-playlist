@@ -35,6 +35,9 @@ builder.Services.AddScoped<ISongRepository, SongRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICollaborativePlaylistService, CollaborativePlaylistService>();
 
+builder.Services.AddScoped<IReactionRepository, ReactionRepository>();
+builder.Services.AddScoped<IReactionService, ReactionService>();
+
 // ===================================================
 //  CORS — leidžiam frontend'ui jungtis prie API
 // ===================================================

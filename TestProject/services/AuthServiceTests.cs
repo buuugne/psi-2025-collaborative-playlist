@@ -10,6 +10,8 @@ namespace TestProject
 {
     public class AuthServiceTests
     {
+        // ========== LOGIN TESTS ==========
+
         [Fact]
         public async Task Login_ShouldFail_WhenPasswordIsWrong()
         {
@@ -17,7 +19,6 @@ namespace TestProject
             var mockUserRepo = new Mock<IUserRepository>();
             var mockTokenService = new Mock<ITokenService>();
 
-            // Simulate a stored user in the "database"
             var storedUser = new User
             {
                 Id = 1,
@@ -26,14 +27,11 @@ namespace TestProject
                 Role = UserRole.Host
             };
 
-            // Setup the mock repository to return our stored user when queried by username
             mockUserRepo.Setup(x => x.GetByUsernameAsync("testuser"))
                         .ReturnsAsync(storedUser);
 
-            // Create an instance of AuthService with mocked dependencies
             var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
 
-            // Create a DTO representing the user trying to log in with the WRONG password
             var loginDto = new LoginUserDto
             {
                 Username = "testuser",
@@ -41,18 +39,12 @@ namespace TestProject
             };
 
             // --- ACT ---
-            // Call the method under test
             var (success, error, result) = await authService.LoginAsync(loginDto);
 
             // --- ASSERT ---
-            // Check that login failed
             Assert.False(success);
-            // Check that the correct error message is returned
             Assert.Equal("Invalid credentials", error);
-            // There should be no token returned
             Assert.Null(result);
-
-            // Ensure the TokenService's Generate method was never called
             mockTokenService.Verify(x => x.Generate(It.IsAny<User>()), Times.Never);
         }
         
@@ -63,7 +55,6 @@ namespace TestProject
             var mockUserRepo = new Mock<IUserRepository>();
             var mockTokenService = new Mock<ITokenService>();
 
-            // Simulate stored user with hashed password
             var storedUser = new User
             {
                 Id = 1,
@@ -72,18 +63,14 @@ namespace TestProject
                 Role = UserRole.Host
             };
 
-            // Mock GetByUsernameAsync to return our stored user
             mockUserRepo.Setup(x => x.GetByUsernameAsync("testuser"))
                         .ReturnsAsync(storedUser);
 
-            // Mock token generation to return a fake token string
             mockTokenService.Setup(x => x.Generate(storedUser))
                             .Returns("fake-jwt-token");
 
-            // AuthService instance with mocks
             var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
 
-            // DTO representing correct login credentials
             var loginDto = new LoginUserDto
             {
                 Username = "testuser",
@@ -94,19 +81,349 @@ namespace TestProject
             var (success, error, result) = await authService.LoginAsync(loginDto);
 
             // --- ASSERT ---
-            // Login should succeed
             Assert.True(success);
-            // No error message should be returned
             Assert.Null(error);
-            // Result DTO should not be null
             Assert.NotNull(result);
-            // Token in result should match what we mocked
             Assert.Equal("fake-jwt-token", result.Token);
-            // User information should be correctly returned
             Assert.Equal("testuser", result.User.Username);
-
-            // Verify that token was generated exactly once
             mockTokenService.Verify(x => x.Generate(storedUser), Times.Once);
+        }
+
+        [Fact]
+        public async Task Login_ShouldFail_WhenUsernameDoesNotExist()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+
+            // Return null when user doesn't exist
+            mockUserRepo.Setup(x => x.GetByUsernameAsync("nonexistent"))
+                        .ReturnsAsync((User?)null);
+
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var loginDto = new LoginUserDto
+            {
+                Username = "nonexistent",
+                Password = "anypassword"
+            };
+
+            // --- ACT ---
+            var (success, error, result) = await authService.LoginAsync(loginDto);
+
+            // --- ASSERT ---
+            Assert.False(success);
+            Assert.Equal("Invalid credentials", error);
+            Assert.Null(result);
+            mockTokenService.Verify(x => x.Generate(It.IsAny<User>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Login_ShouldFail_WhenUsernameIsEmpty()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var loginDto = new LoginUserDto
+            {
+                Username = "",
+                Password = "password123"
+            };
+
+            // --- ACT ---
+            var (success, error, result) = await authService.LoginAsync(loginDto);
+
+            // --- ASSERT ---
+            Assert.False(success);
+            Assert.Equal("Username and password are required", error);
+            Assert.Null(result);
+            mockUserRepo.Verify(x => x.GetByUsernameAsync(It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Login_ShouldFail_WhenPasswordIsEmpty()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var loginDto = new LoginUserDto
+            {
+                Username = "testuser",
+                Password = ""
+            };
+
+            // --- ACT ---
+            var (success, error, result) = await authService.LoginAsync(loginDto);
+
+            // --- ASSERT ---
+            Assert.False(success);
+            Assert.Equal("Username and password are required", error);
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task Login_ShouldTrimUsernameWhitespace()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+
+            var storedUser = new User
+            {
+                Id = 1,
+                Username = "testuser",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
+                Role = UserRole.Host
+            };
+
+            mockUserRepo.Setup(x => x.GetByUsernameAsync("testuser"))
+                        .ReturnsAsync(storedUser);
+
+            mockTokenService.Setup(x => x.Generate(storedUser))
+                            .Returns("token");
+
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var loginDto = new LoginUserDto
+            {
+                Username = "  testuser  ", // with whitespace
+                Password = "password123"
+            };
+
+            // --- ACT ---
+            var (success, error, result) = await authService.LoginAsync(loginDto);
+
+            // --- ASSERT ---
+            Assert.True(success);
+            mockUserRepo.Verify(x => x.GetByUsernameAsync("testuser"), Times.Once);
+        }
+
+        // ========== REGISTER TESTS ==========
+
+        [Fact]
+        public async Task Register_ShouldSucceed_WhenDataIsValid()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+
+            mockUserRepo.Setup(x => x.ExistsByUsernameAsync("newuser"))
+                        .ReturnsAsync(false);
+
+            mockUserRepo.Setup(x => x.AddAsync(It.IsAny<User>()))
+                        .Callback<User>(u => u.Id = 100)
+                        .Returns(Task.CompletedTask);
+
+            mockTokenService.Setup(x => x.Generate(It.IsAny<User>()))
+                            .Returns("new-user-token");
+
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var registerDto = new RegisterUserDto
+            {
+                Username = "newuser",
+                Password = "password123",
+                ConfirmPassword = "password123"
+            };
+
+            // --- ACT ---
+            var (success, error, result) = await authService.RegisterAsync(registerDto);
+
+            // --- ASSERT ---
+            Assert.True(success);
+            Assert.Null(error);
+            Assert.NotNull(result);
+            Assert.Equal("new-user-token", result.Token);
+            Assert.Equal("newuser", result.User.Username);
+            Assert.Equal(UserRole.Host, result.User.Role);
+
+            mockUserRepo.Verify(x => x.AddAsync(It.Is<User>(u => 
+                u.Username == "newuser" && 
+                u.Role == UserRole.Host
+            )), Times.Once);
+        }
+
+        [Fact]
+        public async Task Register_ShouldFail_WhenUsernameAlreadyExists()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+
+            mockUserRepo.Setup(x => x.ExistsByUsernameAsync("existinguser"))
+                        .ReturnsAsync(true);
+
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var registerDto = new RegisterUserDto
+            {
+                Username = "existinguser",
+                Password = "password123",
+                ConfirmPassword = "password123"
+            };
+
+            // --- ACT ---
+            var (success, error, result) = await authService.RegisterAsync(registerDto);
+
+            // --- ASSERT ---
+            Assert.False(success);
+            Assert.Equal("Username already exists", error);
+            Assert.Null(result);
+            mockUserRepo.Verify(x => x.AddAsync(It.IsAny<User>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Register_ShouldFail_WhenPasswordsDoNotMatch()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var registerDto = new RegisterUserDto
+            {
+                Username = "newuser",
+                Password = "password123",
+                ConfirmPassword = "differentpassword"
+            };
+
+            // --- ACT ---
+            var (success, error, result) = await authService.RegisterAsync(registerDto);
+
+            // --- ASSERT ---
+            Assert.False(success);
+            Assert.Equal("Passwords do not match", error);
+            Assert.Null(result);
+            mockUserRepo.Verify(x => x.ExistsByUsernameAsync(It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Register_ShouldFail_WhenUsernameIsEmpty()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var registerDto = new RegisterUserDto
+            {
+                Username = "",
+                Password = "password123",
+                ConfirmPassword = "password123"
+            };
+
+            // --- ACT ---
+            var (success, error, result) = await authService.RegisterAsync(registerDto);
+
+            // --- ASSERT ---
+            Assert.False(success);
+            Assert.Equal("Username and password are required", error);
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task Register_ShouldFail_WhenPasswordIsEmpty()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var registerDto = new RegisterUserDto
+            {
+                Username = "newuser",
+                Password = "",
+                ConfirmPassword = ""
+            };
+
+            // --- ACT ---
+            var (success, error, result) = await authService.RegisterAsync(registerDto);
+
+            // --- ASSERT ---
+            Assert.False(success);
+            Assert.Equal("Username and password are required", error);
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task Register_ShouldHashPassword()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+
+            User? capturedUser = null;
+            mockUserRepo.Setup(x => x.ExistsByUsernameAsync(It.IsAny<string>()))
+                        .ReturnsAsync(false);
+
+            mockUserRepo.Setup(x => x.AddAsync(It.IsAny<User>()))
+                        .Callback<User>(u => { 
+                            capturedUser = u;
+                            u.Id = 200;
+                        })
+                        .Returns(Task.CompletedTask);
+
+            mockTokenService.Setup(x => x.Generate(It.IsAny<User>()))
+                            .Returns("token");
+
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var registerDto = new RegisterUserDto
+            {
+                Username = "secureuser",
+                Password = "myplaintextpassword",
+                ConfirmPassword = "myplaintextpassword"
+            };
+
+            // --- ACT ---
+            await authService.RegisterAsync(registerDto);
+
+            // --- ASSERT ---
+            Assert.NotNull(capturedUser);
+            Assert.NotEqual("myplaintextpassword", capturedUser.PasswordHash);
+            
+            // Verify the hash is valid BCrypt hash
+            var isValidHash = BCrypt.Net.BCrypt.Verify("myplaintextpassword", capturedUser.PasswordHash);
+            Assert.True(isValidHash);
+        }
+
+        [Fact]
+        public async Task Register_ShouldTrimUsernameWhitespace()
+        {
+            // --- ARRANGE ---
+            var mockUserRepo = new Mock<IUserRepository>();
+            var mockTokenService = new Mock<ITokenService>();
+
+            mockUserRepo.Setup(x => x.ExistsByUsernameAsync("trimmeduser"))
+                        .ReturnsAsync(false);
+
+            mockUserRepo.Setup(x => x.AddAsync(It.IsAny<User>()))
+                        .Callback<User>(u => u.Id = 300)
+                        .Returns(Task.CompletedTask);
+
+            mockTokenService.Setup(x => x.Generate(It.IsAny<User>()))
+                            .Returns("token");
+
+            var authService = new AuthService(mockUserRepo.Object, mockTokenService.Object);
+
+            var registerDto = new RegisterUserDto
+            {
+                Username = "  trimmeduser  ",
+                Password = "password123",
+                ConfirmPassword = "password123"
+            };
+
+            // --- ACT ---
+            var (success, error, result) = await authService.RegisterAsync(registerDto);
+
+            // --- ASSERT ---
+            Assert.True(success);
+            mockUserRepo.Verify(x => x.ExistsByUsernameAsync("trimmeduser"), Times.Once);
+            Assert.Equal("trimmeduser", result!.User.Username);
         }
     }
 }

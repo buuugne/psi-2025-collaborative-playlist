@@ -37,6 +37,8 @@ namespace TestProject
                 Title = "Song 1",
                 Album = "Album 1",
                 DurationSeconds = 180,
+                SpotifyId = "spotify:track:song1",
+                SpotifyUri = "spotify:track:song1",
                 Artists = new List<Artist> { artist1 }
             };
 
@@ -46,6 +48,8 @@ namespace TestProject
                 Title = "Song 2",
                 Album = "Album 2",
                 DurationSeconds = 200,
+                SpotifyId = "spotify:track:song2",
+                SpotifyUri = "spotify:track:song2",
                 Artists = new List<Artist> { artist2 }
             };
 
@@ -90,6 +94,8 @@ namespace TestProject
                 Title = "Test Song",
                 Album = "Test Album",
                 DurationSeconds = 180,
+                SpotifyId = "spotify:track:test1",
+                SpotifyUri = "spotify:track:test1",
                 Artists = new List<Artist> { artist }
             };
 
@@ -132,7 +138,9 @@ namespace TestProject
             {
                 Id = 1,
                 Title = "Test Song",
-                DurationSeconds = 180
+                DurationSeconds = 180,
+                SpotifyId = "spotify:track:test1",
+                SpotifyUri = "spotify:track:test1"
             };
 
             context.Songs.Add(song);
@@ -170,7 +178,9 @@ namespace TestProject
             {
                 Title = "New Song",
                 Album = "New Album",
-                DurationSeconds = 200
+                DurationSeconds = 200,
+                SpotifyId = "spotify:track:new1",
+                SpotifyUri = "spotify:track:new1"
             };
 
             // --- ACT ---
@@ -194,7 +204,9 @@ namespace TestProject
             {
                 Title = "Original Title",
                 Album = "Original Album",
-                DurationSeconds = 180
+                DurationSeconds = 180,
+                SpotifyId = "spotify:track:original",
+                SpotifyUri = "spotify:track:original"
             };
 
             context.Songs.Add(song);
@@ -223,7 +235,9 @@ namespace TestProject
             {
                 Title = "To Delete",
                 Album = "Test Album",
-                DurationSeconds = 180
+                DurationSeconds = 180,
+                SpotifyId = "spotify:track:delete1",
+                SpotifyUri = "spotify:track:delete1"
             };
 
             context.Songs.Add(song);
@@ -250,6 +264,8 @@ namespace TestProject
                 Title = "Unique Song",
                 Album = "Unique Album",
                 DurationSeconds = 180,
+                SpotifyId = "spotify:track:unique1",
+                SpotifyUri = "spotify:track:unique1",
                 Artists = new List<Artist> { artist }
             };
 
@@ -291,7 +307,9 @@ namespace TestProject
             {
                 Title = "Song Without Album",
                 Album = null,
-                DurationSeconds = 180
+                DurationSeconds = 180,
+                SpotifyId = "spotify:track:noalbum1",
+                SpotifyUri = "spotify:track:noalbum1"
             };
 
             context.Songs.Add(song);
@@ -317,10 +335,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
-                "New Song",
-                "New Album",
-                180,
-                artistNames
+                title: "New Song",
+                album: "New Album",
+                durationSeconds: 180,
+                artistNames: artistNames,
+                spotifyId: "spotify:track:new123",
+                spotifyUri: "spotify:track:new123"
             );
 
             // --- ASSERT ---
@@ -350,6 +370,8 @@ namespace TestProject
                 Title = "Existing Song",
                 Album = "Existing Album",
                 DurationSeconds = 200,
+                SpotifyId = "spotify:track:existing1",
+                SpotifyUri = "spotify:track:existing1",
                 Artists = new List<Artist> { artist }
             };
 
@@ -360,16 +382,18 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
-                "Existing Song",
-                "Existing Album",
-                200,
-                new List<string> { "New Artist" }
+                title: "Updated Title",
+                album: "Updated Album",
+                durationSeconds: 200,
+                artistNames: new List<string> { "New Artist" },
+                spotifyId: "spotify:track:existing1",
+                spotifyUri: "spotify:track:existing1"
             );
 
             // --- ASSERT ---
             Assert.NotNull(result);
             Assert.Equal(existingSong.Id, result.Id);
-            Assert.Equal("Existing Song", result.Title);
+            Assert.Equal("Updated Title", result.Title); // Should update title
 
             // Verify no new song was created
             var finalSongCount = await context.Songs.CountAsync();
@@ -392,10 +416,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
-                "Song Title",
-                "Album",
-                180,
-                artistNames
+                title: "Song Title",
+                album: "Album",
+                durationSeconds: 180,
+                artistNames: artistNames,
+                spotifyId: "spotify:track:reuse1",
+                spotifyUri: "spotify:track:reuse1"
             );
 
             // --- ASSERT ---
@@ -420,10 +446,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
-                "Test Song",
-                "Test Album",
-                180,
-                artistNames
+                title: "Test Song",
+                album: "Test Album",
+                durationSeconds: 180,
+                artistNames: artistNames,
+                spotifyId: "spotify:track:dupes1",
+                spotifyUri: "spotify:track:dupes1"
             );
 
             // --- ASSERT ---
@@ -446,10 +474,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
-                "Test Song",
-                "Test Album",
-                180,
-                artistNames
+                title: "Test Song",
+                album: "Test Album",
+                durationSeconds: 180,
+                artistNames: artistNames,
+                spotifyId: "spotify:track:test5",
+                spotifyUri: "spotify:track:test5"
             );
 
             // --- ASSERT ---
@@ -470,10 +500,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
-                "Test Song",
-                "Test Album",
-                180,
-                artistNames
+                title: "New Song",
+                album: "New Album",
+                durationSeconds: 180,
+                artistNames: artistNames,
+                spotifyId: "spotify:track:trim1",
+                spotifyUri: "spotify:track:trim1"
             );
 
             // --- ASSERT ---
@@ -496,10 +528,12 @@ namespace TestProject
 
             // --- ACT ---
             var result = await repo.EnsureSongWithArtistsAsync(
-                "Song Without Duration",
-                "Album",
-                null,
-                artistNames
+                title: "Song Without Duration",
+                album: "Album",
+                durationSeconds: null,
+                artistNames: artistNames,
+                spotifyId: "spotify:track:noduration1",
+                spotifyUri: "spotify:track:noduration1"
             );
 
             // --- ASSERT ---

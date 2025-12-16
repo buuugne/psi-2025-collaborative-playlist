@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { useSpotifyPlayer } from "../context/SpotifyPlayerContext";
 
-const API_BASE = "http://localhost:5000"
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
+
 
 interface SpotifyLoginProps {
   hidden?: boolean;

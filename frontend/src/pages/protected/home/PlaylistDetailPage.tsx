@@ -377,13 +377,6 @@ export default function PlaylistDetailPage() {
         </button>
         <button
           type="button"
-          className="playlist-detail-page__btn playlist-detail-page__btn--icon"
-        >
-          <Shuffle size={20} />
-          Shuffle
-        </button>
-        <button
-          type="button"
           className={`playlist-detail-page__btn playlist-detail-page__btn--icon ${
             showSongSearch ? "playlist-detail-page__btn--active" : ""
           }`}

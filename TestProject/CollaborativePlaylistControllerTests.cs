@@ -406,5 +406,117 @@ namespace TestProject.Controllers
 
             _serviceMock.VerifyAll();
         }
+
+        private void SetUserRaw(string nameIdentifierValue)
+{
+    var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, nameIdentifierValue)
+    };
+    var identity = new ClaimsIdentity(claims, "TestAuth");
+    var claimsPrincipal = new ClaimsPrincipal(identity);
+
+    _controller.ControllerContext = new ControllerContext
+    {
+        HttpContext = new DefaultHttpContext
+        {
+            User = claimsPrincipal
+        }
+    };
+}
+
+// ---------------------------
+// INVALID TOKEN FORMAT (TryParse fails)
+// ---------------------------
+
+[Fact]
+public async Task AddCollaborator_ReturnsUnauthorized_WhenTokenNotInt()
+{
+    SetUserRaw("abc"); // TryParse fail
+
+    var request = new AddCollaboratorByUsernameRequest { Username = "john" };
+    var result = await _controller.AddCollaborator(1, request);
+
+    var unauth = Assert.IsType<UnauthorizedObjectResult>(result);
+    Assert.Equal("Invalid token", unauth.Value);
+
+    // IMPORTANT: Strict mock -> neturi būti kviečiamas service
+    _serviceMock.VerifyNoOtherCalls();
+}
+
+[Fact]
+public async Task AddSongToPlaylist_ReturnsUnauthorized_WhenTokenNotInt()
+{
+    SetUserRaw("abc"); // TryParse fail
+
+    var request = new AddSongToCollaborativePlaylistRequest { SongId = 2 };
+    var result = await _controller.AddSongToPlaylist(1, request);
+
+    var unauth = Assert.IsType<UnauthorizedObjectResult>(result);
+    Assert.Equal("Invalid token", unauth.Value);
+
+    _serviceMock.VerifyNoOtherCalls();
+}
+
+// ---------------------------
+// ASSERT MESSAGE PAYLOADS (controller returns { message = ... })
+// ---------------------------
+
+[Fact]
+public async Task AddCollaborator_ReturnsBadRequest_WithMessageObject_WhenUsernameMissing()
+{
+    SetUser(1);
+
+    var request = new AddCollaboratorByUsernameRequest { Username = " " };
+    var result = await _controller.AddCollaborator(1, request);
+
+    var bad = Assert.IsType<BadRequestObjectResult>(result);
+
+    // payload yra anonymous object: { message = "Username is required." }
+    var msgProp = bad.Value!.GetType().GetProperty("message");
+    Assert.NotNull(msgProp);
+    Assert.Equal("Username is required.", msgProp!.GetValue(bad.Value)?.ToString());
+
+    _serviceMock.VerifyNoOtherCalls();
+}
+
+[Fact]
+public async Task AddSongToPlaylist_ReturnsBadRequest_WithMessageObject_WhenSongIdInvalid()
+{
+    SetUser(1);
+
+    var request = new AddSongToCollaborativePlaylistRequest { SongId = 0 };
+    var result = await _controller.AddSongToPlaylist(1, request);
+
+    var bad = Assert.IsType<BadRequestObjectResult>(result);
+    var msgProp = bad.Value!.GetType().GetProperty("message");
+    Assert.NotNull(msgProp);
+    Assert.Equal("Invalid song ID.", msgProp!.GetValue(bad.Value)?.ToString());
+
+    _serviceMock.VerifyNoOtherCalls();
+}
+
+// ---------------------------
+// CHECK ACCESS payload { hasAccess = bool }
+// ---------------------------
+
+[Fact]
+public async Task CheckAccess_ReturnsOk_WithHasAccessProperty()
+{
+    SetUser(1);
+
+    _serviceMock.Setup(s => s.CanAccessPlaylistAsync(1, 1))
+                .ReturnsAsync(true);
+
+    var result = await _controller.CheckAccess(1);
+
+    var ok = Assert.IsType<OkObjectResult>(result);
+    var prop = ok.Value!.GetType().GetProperty("hasAccess");
+    Assert.NotNull(prop);
+    Assert.Equal(true, prop!.GetValue(ok.Value));
+
+    _serviceMock.VerifyAll();
+}
+
     }
 }

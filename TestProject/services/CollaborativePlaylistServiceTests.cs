@@ -542,5 +542,158 @@ namespace TestProject.Services
             // Assert
             Assert.Empty(result);
         }
+
+        // ---------------------------
+// ADD COLLABORATOR (BY USERNAME) - PLAYLIST NOT FOUND
+// ---------------------------
+[Fact]
+public async Task AddCollaboratorByUsernameAsync_ShouldFail_WhenPlaylistNotFound()
+{
+    _playlistRepoMock.Setup(r => r.GetByIdWithDetailsAsync(1))
+        .ReturnsAsync((Playlist?)null);
+
+    var result = await _service.AddCollaboratorByUsernameAsync(1, "john", 10);
+
+    Assert.False(result.Success);
+    Assert.Contains("not found", result.Error);
+}
+
+// ---------------------------
+// REMOVE COLLABORATOR - NOT HOST
+// ---------------------------
+[Fact]
+public async Task RemoveCollaboratorAsync_ShouldFail_WhenRequesterIsNotHost()
+{
+    var playlist = new Playlist
+    {
+        Id = 1,
+        HostId = 10,
+        Users = new List<User> { new User { Id = 20 } }
+    };
+
+    _playlistRepoMock.Setup(r => r.GetByIdWithDetailsAsync(1)).ReturnsAsync(playlist);
+
+    var result = await _service.RemoveCollaboratorAsync(1, 20, requesterId: 99);
+
+    Assert.False(result.Success);
+    Assert.Contains("Only host", result.Error);
+    _playlistRepoMock.Verify(r => r.UpdateAsync(It.IsAny<Playlist>()), Times.Never);
+}
+
+// ---------------------------
+// REMOVE COLLABORATOR - PLAYLIST NOT FOUND
+// ---------------------------
+[Fact]
+public async Task RemoveCollaboratorAsync_ShouldFail_WhenPlaylistNotFound()
+{
+    _playlistRepoMock.Setup(r => r.GetByIdWithDetailsAsync(1))
+        .ReturnsAsync((Playlist?)null);
+
+    var result = await _service.RemoveCollaboratorAsync(1, 20, 10);
+
+    Assert.False(result.Success);
+    Assert.Contains("not found", result.Error);
+}
+
+// ---------------------------
+// ADD SONG - PLAYLIST NOT FOUND
+// ---------------------------
+[Fact]
+public async Task AddSongAsync_ShouldFail_WhenPlaylistNotFound()
+{
+    _playlistRepoMock.Setup(r => r.GetByIdWithDetailsAsync(1))
+        .ReturnsAsync((Playlist?)null);
+
+    var result = await _service.AddSongAsync(1, 5, 10);
+
+    Assert.False(result.Success);
+    Assert.Contains("not found", result.Error);
+}
+
+// ---------------------------
+// ADD SONG - SONG NOT FOUND
+// ---------------------------
+[Fact]
+public async Task AddSongAsync_ShouldFail_WhenSongNotFound()
+{
+    var playlist = new Playlist
+    {
+        Id = 1,
+        HostId = 10,
+        Users = new List<User>(),
+        PlaylistSongs = new List<PlaylistSong>()
+    };
+
+    _playlistRepoMock.Setup(r => r.GetByIdWithDetailsAsync(1)).ReturnsAsync(playlist);
+    _songRepoMock.Setup(r => r.GetByIdAsync(5)).ReturnsAsync((Song?)null);
+
+    var result = await _service.AddSongAsync(1, 5, 10);
+
+    Assert.False(result.Success);
+    Assert.Contains("not found", result.Error);
+    _playlistRepoMock.Verify(r => r.AddPlaylistSongAsync(It.IsAny<PlaylistSong>()), Times.Never);
+}
+
+// ---------------------------
+// REMOVE SONG - NOT AUTHORIZED
+// ---------------------------
+[Fact]
+public async Task RemoveSongAsync_ShouldFail_WhenUserUnauthorized()
+{
+    var playlist = new Playlist
+    {
+        Id = 1,
+        HostId = 10,
+        Users = new List<User>(), // no collaborators
+        PlaylistSongs = new List<PlaylistSong> { new PlaylistSong { SongId = 5 } }
+    };
+
+    _playlistRepoMock.Setup(r => r.GetByIdWithDetailsAsync(1)).ReturnsAsync(playlist);
+
+    var result = await _service.RemoveSongAsync(1, 5, userId: 99);
+
+    Assert.False(result.Success);
+    Assert.Contains("Only host or collaborator", result.Error);
+    _playlistRepoMock.Verify(r => r.RemovePlaylistSongAsync(It.IsAny<PlaylistSong>()), Times.Never);
+}
+
+// ---------------------------
+// CAN ACCESS - PLAYLIST NOT FOUND
+// ---------------------------
+[Fact]
+public async Task CanAccessPlaylistAsync_ShouldReturnFalse_WhenPlaylistNotFound()
+{
+    _playlistRepoMock.Setup(r => r.GetByIdWithDetailsAsync(1))
+        .ReturnsAsync((Playlist?)null);
+
+    var ok = await _service.CanAccessPlaylistAsync(1, 10);
+
+    Assert.False(ok);
+}
+
+// ---------------------------
+// ADD COLLABORATOR (BY ID) - ALREADY COLLABORATOR
+// ---------------------------
+[Fact]
+public async Task AddCollaboratorAsync_ShouldFail_WhenUserAlreadyCollaborator()
+{
+    var existing = new User { Id = 20, Username = "john" };
+    var playlist = new Playlist
+    {
+        Id = 1,
+        HostId = 10,
+        Users = new List<User> { existing }
+    };
+
+    _playlistRepoMock.Setup(r => r.GetByIdWithDetailsAsync(1)).ReturnsAsync(playlist);
+    _userRepoMock.Setup(r => r.GetByIdAsync(20)).ReturnsAsync(existing);
+
+    var result = await _service.AddCollaboratorAsync(1, 20, 10);
+
+    Assert.False(result.Success);
+    Assert.Contains("already a collaborator", result.Error);
+    _playlistRepoMock.Verify(r => r.UpdateAsync(It.IsAny<Playlist>()), Times.Never);
+}
+
     }
 }

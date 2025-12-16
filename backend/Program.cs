@@ -47,7 +47,7 @@ builder.Services.AddCors(options =>
                   "http://localhost:5173", 
                   "http://127.0.0.1:5173",
                   "https://music-hub-ffrq.onrender.com",
-                  "https://musichub-qwoh.onrender.com/",
+                  "https://musichub-qwoh.onrender.com",
                   "https://musichub-frontend-udeu.onrender.com",
                   "https://psi-2025-collaborative-playlist-frontend.onrender.com"  
               )

@@ -63,7 +63,8 @@ namespace MyApi.Controllers
                     await dto.CoverImage.CopyToAsync(stream);
                 }
 
-                imageUrl = $"/covers/{fileName}";
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                imageUrl = $"{baseUrl}/covers/{fileName}";;
             }
 
             var createDto = new PlaylistCreateDto {

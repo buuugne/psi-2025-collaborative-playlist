@@ -1,0 +1,119 @@
+.song-reactions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.song-reactions__button {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.song-reactions__button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ff6b6b;
+}
+.song-reactions__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.song-reactions__button--active {
+  background: rgba(255, 107, 107, 0.1);
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+.song-reactions__button--active .song-reactions__heart {
+  animation: heartBeat 0.3s ease;
+}
+.song-reactions__heart {
+  transition: all 0.2s ease;
+}
+.song-reactions__count {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.song-reactions__avatars {
+  display: flex;
+  align-items: center;
+  margin-left: 0.25rem;
+}
+.song-reactions__avatar-wrapper {
+  position: relative;
+  margin-left: -0.5rem;
+  transition: transform 0.2s ease, z-index 0s 0.2s;
+}
+.song-reactions__avatar-wrapper:first-child {
+  margin-left: 0;
+}
+.song-reactions__avatar-wrapper:hover {
+  transform: translateY(-2px) scale(1.1);
+  z-index: 10;
+  transition: transform 0.2s ease, z-index 0s;
+}
+.song-reactions__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #1a1a2e;
+  -o-object-fit: cover;
+     object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  cursor: pointer;
+}
+.song-reactions__avatar--placeholder {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.song-reactions__avatar--more {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.65rem;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.song-reactions__tooltip {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.25rem 0.5rem;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 100;
+}
+.song-reactions__tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+@keyframes heartBeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}/*# sourceMappingURL=SongReactions.css.map */

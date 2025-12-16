@@ -19,6 +19,7 @@ import { songService } from "../../../services/SongService";
 import { authService } from "../../../services/authService";
 import { useSpotifyPlayer } from "../../../context/SpotifyPlayerContext";
 import CollaboratorModal from "./components/CollaboratorModal";
+import SongReactions from "./components/SongReactions";
 import type { PlaylistResponseDto } from "../../../types/PlaylistResponseDto";
 import type { Track } from "../../../types/Spotify";
 import "./PlaylistDetailPage.scss";
@@ -514,6 +515,7 @@ export default function PlaylistDetailPage() {
           <span className="playlist-detail-page__col-artist">Artist</span>
           <span className="playlist-detail-page__col-album">Album</span>
           <span className="playlist-detail-page__col-added-by">Added by</span>
+          <span className="playlist-detail-page__col-reactions">Reactions</span>
           <span className="playlist-detail-page__col-duration">
             <Clock size={16} />
           </span>
@@ -560,6 +562,14 @@ export default function PlaylistDetailPage() {
 
                   <div className="playlist-detail-page__track-added-by">
                     {song.addedBy?.username || "Unknown"}
+                  </div>
+
+                  <div className="playlist-detail-page__track-reactions">
+                    <SongReactions
+                      playlistId={playlist.id}
+                      songId={song.id}
+                      currentUserId={currentUser?.id}
+                    />
                   </div>
 
                   <div className="playlist-detail-page__track-duration">

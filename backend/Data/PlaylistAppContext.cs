@@ -15,6 +15,7 @@ public partial class PlaylistAppContext : DbContext
     public virtual DbSet<PlaylistSong> PlaylistSongs { get; set; }
     public virtual DbSet<Song> Songs { get; set; }
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<PlaylistSongReaction> PlaylistSongReactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -38,7 +39,7 @@ public partial class PlaylistAppContext : DbContext
             entity.Property(e => e.Role)
                 .HasColumnName("role")
                 .HasMaxLength(20)
-                .HasConversion<int>(); 
+                .HasConversion<int>();
         });
 
         modelBuilder.Entity<Song>(entity =>
@@ -73,8 +74,7 @@ public partial class PlaylistAppContext : DbContext
             entity.Property(e => e.PlaylistId).HasColumnName("playlist_id");
             entity.Property(e => e.SongId).HasColumnName("song_id");
             entity.Property(e => e.Position).HasColumnName("position");
-            
-            // NEW: Configure the AddedBy columns
+
             entity.Property(e => e.AddedByUserId).HasColumnName("added_by_user_id");
             entity.Property(e => e.AddedAt)
                 .HasColumnName("added_at")
@@ -90,11 +90,46 @@ public partial class PlaylistAppContext : DbContext
                 .HasForeignKey(d => d.SongId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // NEW: Configure the AddedBy relationship
             entity.HasOne(d => d.AddedBy)
                 .WithMany()
                 .HasForeignKey(d => d.AddedByUserId)
                 .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<PlaylistSongReaction>(entity =>
+        {
+            entity.ToTable("playlist_song_reactions");
+            entity.HasKey(e => e.Id).HasName("pk_playlist_song_reactions");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.PlaylistId).HasColumnName("playlist_id");
+            entity.Property(e => e.SongId).HasColumnName("song_id");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.IsLike).HasColumnName("is_like");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            // Unique constraint
+            entity.HasIndex(e => new { e.PlaylistId, e.SongId, e.UserId })
+                .IsUnique()
+                .HasDatabaseName("ix_playlist_song_reactions_unique");
+
+            // Relationships
+            entity.HasOne(e => e.Playlist)
+                .WithMany()
+                .HasForeignKey(e => e.PlaylistId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Song)
+                .WithMany()
+                .HasForeignKey(e => e.SongId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Playlist>(entity =>

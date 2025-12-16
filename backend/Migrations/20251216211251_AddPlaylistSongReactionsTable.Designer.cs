@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyApi.Migrations
 {
     [DbContext(typeof(PlaylistAppContext))]
-    [Migration("20251215142924_AddPlaylistSongReactions")]
-    partial class AddPlaylistSongReactions
+    [Migration("20251216211251_AddPlaylistSongReactionsTable")]
+    partial class AddPlaylistSongReactionsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -141,14 +141,6 @@ namespace MyApi.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("playlist_id");
 
-                    b.Property<int?>("PlaylistSongPlaylistId")
-                        .HasColumnType("integer")
-                        .HasColumnName("playlist_song_playlist_id");
-
-                    b.Property<int?>("PlaylistSongSongId")
-                        .HasColumnType("integer")
-                        .HasColumnName("playlist_song_song_id");
-
                     b.Property<int>("SongId")
                         .HasColumnType("integer")
                         .HasColumnName("song_id");
@@ -166,12 +158,9 @@ namespace MyApi.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_playlist_song_reactions_user_id");
 
-                    b.HasIndex("PlaylistSongPlaylistId", "PlaylistSongSongId")
-                        .HasDatabaseName("ix_playlist_song_reactions_playlist_song_playlist_id_playlist_");
-
                     b.HasIndex("PlaylistId", "SongId", "UserId")
                         .IsUnique()
-                        .HasDatabaseName("ix_playlist_song_reactions_playlist_id_song_id_user_id");
+                        .HasDatabaseName("ix_playlist_song_reactions_unique");
 
                     b.ToTable("playlist_song_reactions", (string)null);
                 });
@@ -345,14 +334,14 @@ namespace MyApi.Migrations
             modelBuilder.Entity("MyApi.Models.PlaylistSongReaction", b =>
                 {
                     b.HasOne("MyApi.Models.Playlist", "Playlist")
-                        .WithMany("Reactions")
+                        .WithMany()
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_playlist_song_reactions_playlists_playlist_id");
 
                     b.HasOne("MyApi.Models.Song", "Song")
-                        .WithMany("Reactions")
+                        .WithMany()
                         .HasForeignKey("SongId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -361,14 +350,9 @@ namespace MyApi.Migrations
                     b.HasOne("MyApi.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_playlist_song_reactions_users_user_id");
-
-                    b.HasOne("MyApi.Models.PlaylistSong", null)
-                        .WithMany("Reactions")
-                        .HasForeignKey("PlaylistSongPlaylistId", "PlaylistSongSongId")
-                        .HasConstraintName("fk_playlist_song_reactions_playlist_songs_playlist_song_playli");
 
                     b.Navigation("Playlist");
 
@@ -414,20 +398,11 @@ namespace MyApi.Migrations
             modelBuilder.Entity("MyApi.Models.Playlist", b =>
                 {
                     b.Navigation("PlaylistSongs");
-
-                    b.Navigation("Reactions");
-                });
-
-            modelBuilder.Entity("MyApi.Models.PlaylistSong", b =>
-                {
-                    b.Navigation("Reactions");
                 });
 
             modelBuilder.Entity("MyApi.Models.Song", b =>
                 {
                     b.Navigation("PlaylistSongs");
-
-                    b.Navigation("Reactions");
                 });
 
             modelBuilder.Entity("MyApi.Models.User", b =>

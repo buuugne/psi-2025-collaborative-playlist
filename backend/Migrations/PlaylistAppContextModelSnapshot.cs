@@ -115,6 +115,53 @@ namespace MyApi.Migrations
                     b.ToTable("playlist_songs", (string)null);
                 });
 
+            modelBuilder.Entity("MyApi.Models.PlaylistSongReaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<bool>("IsLike")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_like");
+
+                    b.Property<int>("PlaylistId")
+                        .HasColumnType("integer")
+                        .HasColumnName("playlist_id");
+
+                    b.Property<int>("SongId")
+                        .HasColumnType("integer")
+                        .HasColumnName("song_id");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_playlist_song_reactions");
+
+                    b.HasIndex("SongId")
+                        .HasDatabaseName("ix_playlist_song_reactions_song_id");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_playlist_song_reactions_user_id");
+
+                    b.HasIndex("PlaylistId", "SongId", "UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_playlist_song_reactions_unique");
+
+                    b.ToTable("playlist_song_reactions", (string)null);
+                });
+
             modelBuilder.Entity("MyApi.Models.Song", b =>
                 {
                     b.Property<int>("Id")
@@ -279,6 +326,36 @@ namespace MyApi.Migrations
                     b.Navigation("Playlist");
 
                     b.Navigation("Song");
+                });
+
+            modelBuilder.Entity("MyApi.Models.PlaylistSongReaction", b =>
+                {
+                    b.HasOne("MyApi.Models.Playlist", "Playlist")
+                        .WithMany()
+                        .HasForeignKey("PlaylistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_playlist_song_reactions_playlists_playlist_id");
+
+                    b.HasOne("MyApi.Models.Song", "Song")
+                        .WithMany()
+                        .HasForeignKey("SongId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_playlist_song_reactions_songs_song_id");
+
+                    b.HasOne("MyApi.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_playlist_song_reactions_users_user_id");
+
+                    b.Navigation("Playlist");
+
+                    b.Navigation("Song");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("playlist_collaborators", b =>

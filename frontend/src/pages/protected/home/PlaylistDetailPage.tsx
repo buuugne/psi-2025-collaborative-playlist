@@ -50,6 +50,8 @@ export default function PlaylistDetailPage() {
     </div>
   );
 
+  const API_BASE = import.meta.env.VITE_API_URL || '';
+
   // Spotify player integration
   const { play, pause, playerState, spotifyToken, deviceId } = useSpotifyPlayer();
 
@@ -173,8 +175,7 @@ export default function PlaylistDetailPage() {
     if (playlist.imageUrl.startsWith('http')) return playlist.imageUrl;
     
     const path = playlist.imageUrl.startsWith('/') ? playlist.imageUrl : `/${playlist.imageUrl}`;
-    console.log('Final image path:', path);
-    return path;
+    return `${API_BASE}${path}`;
   };
 
   const formatDuration = (durationMs?: number, seconds?: number) => {

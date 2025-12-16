@@ -11,8 +11,6 @@ import Settings from '../pages/public/settings/settingsPage';
 import HomePage from "../pages/protected/home/HomePage";
 import PlaylistDetailPage from "../pages/protected/home/PlaylistDetailPage";
 import PlaylistsPage from "../pages/protected/playlistsPage/playlistsPage";
-import LiveSessionsPage from "../pages/protected/LiveSessions/LiveSessionsPage";
-import SpotifyCallback from "../pages/public/SpotifyCallback";
 
 export default function AppRoutes() {
   const navigate = useNavigate();
@@ -55,15 +53,7 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
-        
-        <Route
-          path="/live-sessions"
-          element={
-            <ProtectedRoute>
-              <LiveSessionsPage />
-            </ProtectedRoute>
-          }
-        />
+      
         
         <Route
           path="/playlists"

@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { PlaylistService } from "../../../services/PlaylistService";
 import { songService } from "../../../services/SongService";
-// import { authService } from "../../../services/authService";
+import { authService } from "../../../services/authService";
 import { useSpotifyPlayer } from "../../../context/SpotifyPlayerContext";
 import CollaboratorModal from "./components/CollaboratorModal";
 import type { PlaylistResponseDto } from "../../../types/PlaylistResponseDto";
@@ -42,7 +42,6 @@ export default function PlaylistDetailPage() {
 
   const [showCollaboratorModal, setShowCollaboratorModal] = useState(false);
 
-
   const Equalizer = () => (
     <div className="equalizer">
       <span></span>
@@ -52,21 +51,20 @@ export default function PlaylistDetailPage() {
   );
 
   // Spotify player integration
-  const { play, pause, playerState, spotifyToken, deviceId } =
-    useSpotifyPlayer();
+  const { play, pause, playerState, spotifyToken, deviceId } = useSpotifyPlayer();
 
-  // const currentUser = authService.getUser();
+  const currentUser = authService.getUser();
+  const isHost = currentUser && playlist && playlist.host?.id === currentUser.id;
 
   useEffect(() => {
     loadPlaylist();
   }, [id]);
 
-        useEffect(() => {
-        console.log("Spotify token:", spotifyToken);
-        console.log("Device ID:", deviceId);
-        console.log("Player ready:", playerState.isReady);
-      }, [spotifyToken, deviceId, playerState.isReady]);
-
+  useEffect(() => {
+    console.log("Spotify token:", spotifyToken);
+    console.log("Device ID:", deviceId);
+    console.log("Player ready:", playerState.isReady);
+  }, [spotifyToken, deviceId, playerState.isReady]);
 
   useEffect(() => {
     if (playlist) {
@@ -110,10 +108,7 @@ export default function PlaylistDetailPage() {
     }
 
     if (!spotifyToken || !deviceId || !playerState.isReady) {
-
-      alert(
-        "Spotify player is not ready. Please connect your Spotify account."
-      );
+      alert("Spotify player is not ready. Please connect your Spotify account.");
       return;
     }
 
@@ -177,16 +172,13 @@ export default function PlaylistDetailPage() {
     if (!playlist?.imageUrl) return `https://picsum.photos/seed/${playlist?.id}/400`;
     if (playlist.imageUrl.startsWith('http')) return playlist.imageUrl;
     
-   
     const path = playlist.imageUrl.startsWith('/') ? playlist.imageUrl : `/${playlist.imageUrl}`;
     console.log('Final image path:', path);
     return path;
   };
 
   const formatDuration = (durationMs?: number, seconds?: number) => {
-    const totalSeconds = durationMs
-      ? Math.floor(durationMs / 1000)
-      : seconds || 0;
+    const totalSeconds = durationMs ? Math.floor(durationMs / 1000) : seconds || 0;
     const minutes = Math.floor(totalSeconds / 60);
     const secs = Math.floor(totalSeconds % 60);
     return `${minutes}:${secs.toString().padStart(2, "0")}`;
@@ -256,9 +248,7 @@ export default function PlaylistDetailPage() {
         });
       case "recent":
       default:
-        return songs.sort(
-          (a, b) => (b.position || b.id) - (a.position || a.id)
-        );
+        return songs.sort((a, b) => (b.position || b.id) - (a.position || a.id));
     }
   };
 
@@ -296,8 +286,7 @@ export default function PlaylistDetailPage() {
               )}
               <div className="playlist-detail-page__meta">
                 <span>
-                  Created by{" "}
-                  <strong>{playlist.host?.username || "Unknown"}</strong>
+                  Created by <strong>{playlist.host?.username || "Unknown"}</strong>
                 </span>
                 <span>•</span>
                 <span>{getTotalDuration()}</span>
@@ -319,20 +308,24 @@ export default function PlaylistDetailPage() {
               )}
 
               <div className="playlist-detail-page__header-actions">
-                <button
-                  type="button"
-                  className="playlist-detail-page__edit-btn"
-                  onClick={handleStartEdit}
-                >
-                  <Edit3 size={16} /> Edit
-                </button>
-                <button
-                  type="button"
-                  className="playlist-detail-page__edit-btn"
-                  onClick={() => setShowCollaboratorModal(true)}
-                >
-                  <UserPlus size={16} /> Add Collaborator
-                </button>
+                {isHost && (
+                  <>
+                    <button
+                      type="button"
+                      className="playlist-detail-page__edit-btn"
+                      onClick={handleStartEdit}
+                    >
+                      <Edit3 size={16} /> Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="playlist-detail-page__edit-btn"
+                      onClick={() => setShowCollaboratorModal(true)}
+                    >
+                      <UserPlus size={16} /> Manage Collaborators
+                    </button>
+                  </>
+                )}
               </div>
             </>
           ) : (
@@ -425,10 +418,7 @@ export default function PlaylistDetailPage() {
           {searchResults.length > 0 && (
             <div className="playlist-detail-page__search-results">
               {searchResults.map((track) => (
-                <div
-                  key={track.id}
-                  className="playlist-detail-page__search-result"
-                >
+                <div key={track.id} className="playlist-detail-page__search-result">
                   {track.album?.images?.[0]?.url && (
                     <img
                       src={track.album.images[0].url}
@@ -547,18 +537,12 @@ export default function PlaylistDetailPage() {
               return (
                 <div key={song.id} className="playlist-detail-page__track">
                   <div className="playlist-detail-page__track-number">
-                    {isPlaying && playerState.isPlaying ? (
-                      <Equalizer />
-                    ) : (
-                      index + 1
-                    )}
+                    {isPlaying && playerState.isPlaying ? <Equalizer /> : index + 1}
                   </div>
 
                   <div
                     className={`playlist-detail-page__track-info ${
-                      isPlaying
-                        ? "playlist-detail-page__track-info--playing"
-                        : ""
+                      isPlaying ? "playlist-detail-page__track-info--playing" : ""
                     }`}
                   >
                     <div className="playlist-detail-page__track-name">
@@ -579,8 +563,7 @@ export default function PlaylistDetailPage() {
                   </div>
 
                   <div className="playlist-detail-page__track-duration">
-                    {song.durationFormatted ||
-                      formatDuration(undefined, song.duration)}
+                    {song.durationFormatted || formatDuration(undefined, song.duration)}
                   </div>
 
                   <div className="playlist-detail-page__track-actions">

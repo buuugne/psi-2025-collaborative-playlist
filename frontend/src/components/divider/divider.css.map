@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AACK,AAAD,oBAAa,CAAC;EACZ,KAAK,EAAE,IAAI;EACX,MAAM,EAAE,GAAG;EACX,gBAAgB,EAAE,SAAS;EAC3B,MAAM,EAAE,MAAM;CACf;;AAEA,AAAD,kBAAW,CAAC;EACV,KAAK,EAAE,GAAG;EACV,MAAM,EAAE,IAAI;EACZ,gBAAgB,EAAE,SAAS;EAC3B,MAAM,EAAE,MAAM;CACf",
-    "sources": [
-        "divider.scss"
-    ],
-    "names": [],
-    "file": "divider.css"
-}
+{"version":3,"sources":["divider.scss","divider.css"],"names":[],"mappings":"AACI;EACE,WAAA;EACA,WAAA;EACA,0CAAA;EACA,cAAA;ACAN;ADGI;EACE,UAAA;EACA,YAAA;EACA,0CAAA;EACA,cAAA;ACDN","file":"divider.css"}

@@ -1,0 +1,180 @@
+.playlist-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  /* Action icons shown on hover in the bottom info area */
+  /* Edit mode inputs and actions */
+}
+.playlist-card:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  transform: translateY(-4px);
+}
+.playlist-card:hover .playlist-card__overlay {
+  opacity: 1;
+}
+.playlist-card:hover .playlist-card__play-button {
+  transform: translateY(0);
+  opacity: 1;
+}
+.playlist-card:hover .playlist-card__actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+.playlist-card__cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.playlist-card__cover-image {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.playlist-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.playlist-card__play-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #1db954;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  cursor: pointer;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.playlist-card__play-button:hover {
+  background-color: #1ed760;
+  transform: scale(1.06) translateY(0);
+}
+.playlist-card__play-button:active {
+  transform: scale(0.98) translateY(0);
+}
+.playlist-card__info {
+  padding: 0 4px;
+  position: relative;
+}
+.playlist-card__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e6eef8;
+  margin: 0 0 8px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.playlist-card__description {
+  font-size: 0.875rem;
+  color: rgba(230, 238, 248, 0.6);
+  margin: 0 0 12px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+}
+.playlist-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: rgba(230, 238, 248, 0.5);
+  font-weight: 500;
+}
+.playlist-card__actions {
+  position: absolute;
+  right: 4px;
+  bottom: 6px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: all 0.18s ease;
+}
+.playlist-card__action-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: #e6eef8;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, transform 0.12s;
+}
+.playlist-card__action-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
+}
+.playlist-card__action-btn--danger {
+  background: rgba(220, 38, 38, 0.12);
+  color: #ffb4b4;
+  border-color: rgba(220, 38, 38, 0.15);
+}
+.playlist-card__action-btn--danger:hover {
+  background: rgba(220, 38, 38, 0.18);
+}
+.playlist-card__edit-input {
+  width: 100%;
+  background-color: #0f1115;
+  border: 1px solid #2a2d35;
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #ffffff;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.playlist-card__edit-input--small {
+  font-size: 13px;
+  padding: 6px 8px;
+}
+.playlist-card__edit-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.playlist-card__save-btn {
+  background-color: #22c55e;
+  border: none;
+  color: #041018;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.playlist-card__cancel-btn {
+  background: transparent;
+  border: 1px solid #2a2d35;
+  color: #e6eef8;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}/*# sourceMappingURL=PlaylistCard.css.map */

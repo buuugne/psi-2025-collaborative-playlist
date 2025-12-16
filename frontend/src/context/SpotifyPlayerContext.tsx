@@ -193,7 +193,7 @@ export const SpotifyPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
 
           if (refreshTokenValue) {
             const refreshResponse = await fetch(
-              "http://localhost:5000/api/SpotifyAuth/refresh",
+              `${API_BASE}/api/SpotifyAuth/refresh`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

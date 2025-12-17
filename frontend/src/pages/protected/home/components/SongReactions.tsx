@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Heart } from "lucide-react";
+import { Heart, ThumbsDown } from "lucide-react";
 import { ReactionService } from "../../../../services/ReactionService";
 import type { SongReactionSummaryDto } from "../../../../types/SongReactionSummaryDto";
 import "./SongReactions.scss";
-import { ThumbsDown } from "lucide-react";
+
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 interface SongReactionsProps {
   playlistId: number;
@@ -47,13 +48,26 @@ export default function SongReactions({
     }
   };
 
+  const getUserImageUrl = (profileImage?: string, username?: string) => {
+    if (!profileImage) {
+      return `https://api.dicebear.com/7.x/initials/svg?seed=${username || 'User'}`;
+    }
+    
+    if (profileImage.startsWith('http')) {
+      return profileImage;
+    }
+    
+    const path = profileImage.startsWith('/') ? profileImage : `/${profileImage}`;
+    return `${API_BASE}${path}`;
+  };
+
   const currentUserReaction = reactions.find((r) => r.userId === currentUserId);
   const hasLiked = !!currentUserReaction?.isLike == true;
   const hasDisliked = currentUserReaction?.isLike === false;
   const likeCount = reactions.filter((r) => r.isLike == true).length;
   const dislikeCount = reactions.filter((r) => r.isLike === false).length;
-  // Get first 3 users who liked
   const likedUsers = reactions.filter((r) => r.isLike == true).slice(0, 3);
+
   return (
     <div className="song-reactions">
       <button
@@ -74,7 +88,6 @@ export default function SongReactions({
         )}
       </button>
 
-       {/* DISLIKE */}
       <button
         className={`song-reactions__button ${
           hasDisliked ? "song-reactions__button--dislike-active" : ""
@@ -105,9 +118,12 @@ export default function SongReactions({
             >
               {user.profileImage ? (
                 <img
-                  src={user.profileImage}
+                  src={getUserImageUrl(user.profileImage, user.username)}
                   alt={user.username}
                   className="song-reactions__avatar"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://api.dicebear.com/7.x/initials/svg?seed=${user.username || 'User'}`;
+                  }}
                 />
               ) : (
                 <div className="song-reactions__avatar song-reactions__avatar--placeholder">

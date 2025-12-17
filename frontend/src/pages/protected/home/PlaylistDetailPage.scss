@@ -635,6 +635,15 @@
     text-align: center;
   }
 
+  &__col-duration {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 25px;
+  }
+
+
+
   &__tracks {
     max-height: 600px;
     overflow-y: auto;
@@ -894,6 +903,7 @@
       grid-column: 2 / 3;
       grid-row: 1 / 2;
       font-size: 0.813rem;
+      
     }
 
     &__track-actions {
@@ -964,3 +974,4 @@
   color: #1db954;
   filter: drop-shadow(0 0 4px rgba(29,185,84,0.7));
 }
+

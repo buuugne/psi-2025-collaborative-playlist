@@ -66,4 +66,38 @@ export const PlaylistService = {
     const response = await api.get(`api/playlists/${playlistId}/collaborators`);
     return response.data;
   },
+
+   async addOrUpdateReaction(input: {
+    playlistId: number;
+    songId: number;
+    userId: number;
+    isLike: boolean;
+  }) {
+    const { playlistId, songId, userId, isLike } = input;
+
+    const res = await api.post(
+      `/api/playlists/${playlistId}/songs/${songId}/reaction`,
+      {
+        userId,
+        isLike,
+      }
+    );
+
+    return res.data;
+  },
+
+  async removeReaction(input: {
+    playlistId: number;
+    songId: number;
+    userId: number;
+  }) {
+    const { playlistId, songId, userId } = input;
+
+    await api.delete(
+      `/api/playlists/${playlistId}/songs/${songId}/reaction`,
+      {
+        data: { userId }, // ⚠️ axios delete body
+      }
+    );
+  },
 };

@@ -35,6 +35,8 @@
 .song-reactions__heart {
   transition: all 0.2s ease;
 }
+
+
 .song-reactions__count {
   font-size: 0.75rem;
   font-weight: 500;
@@ -117,3 +119,8 @@
     transform: scale(1.1);
   }
 }/*# sourceMappingURL=SongReactions.css.map */
+
+@keyframes dislikePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}

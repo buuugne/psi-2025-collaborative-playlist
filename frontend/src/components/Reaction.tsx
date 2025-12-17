@@ -35,7 +35,7 @@ const Reaction: React.FC<ReactionProps> = ({
     try {
       if (reaction === isLike) {
         // Remove reaction
-        await PlaylistService.removeReaction({ playlistId, songId, userId: currentUserId });
+        await PlaylistService.removeReaction({ playlistId, songId, userId: currentUserId, isLike });
         setReaction(null);
         if (isLike) setLikes(l => l - 1);
         else setDislikes(d => d - 1);

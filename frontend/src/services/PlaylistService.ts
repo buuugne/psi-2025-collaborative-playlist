@@ -78,7 +78,6 @@ export const PlaylistService = {
     const res = await api.post(
       `/api/playlists/${playlistId}/songs/${songId}/reaction`,
       {
-        userId,
         isLike,
       }
     );
@@ -90,14 +89,17 @@ export const PlaylistService = {
     playlistId: number;
     songId: number;
     userId: number;
+    isLike?: boolean;
   }) {
-    const { playlistId, songId, userId } = input;
+    const { playlistId, songId, userId, isLike } = input;
 
-    await api.delete(
+    const res =  await api.post(
       `/api/playlists/${playlistId}/songs/${songId}/reaction`,
       {
-        data: { userId }, // ⚠️ axios delete body
+        userId,
+        isLike,
       }
     );
+    return res.data;
   },
 };

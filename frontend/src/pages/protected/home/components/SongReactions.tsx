@@ -3,6 +3,7 @@ import { Heart } from "lucide-react";
 import { ReactionService } from "../../../../services/ReactionService";
 import type { SongReactionSummaryDto } from "../../../../types/SongReactionSummaryDto";
 import "./SongReactions.scss";
+import { ThumbsDown } from "lucide-react";
 
 interface SongReactionsProps {
   playlistId: number;
@@ -32,12 +33,12 @@ export default function SongReactions({
     }
   };
 
-  const handleToggle = async () => {
+  const handleToggle = async (isLike: boolean) => {
     if (!currentUserId || isLoading) return;
 
     setIsLoading(true);
     try {
-      await ReactionService.toggleReaction(playlistId, songId, true);
+      await ReactionService.toggleReaction(playlistId, songId, isLike);
       await loadReactions();
     } catch (err) {
       console.error("Failed to toggle reaction:", err);
@@ -47,19 +48,19 @@ export default function SongReactions({
   };
 
   const currentUserReaction = reactions.find((r) => r.userId === currentUserId);
-  const hasLiked = !!currentUserReaction?.isLike;
-  const likeCount = reactions.filter((r) => r.isLike).length;
-
+  const hasLiked = !!currentUserReaction?.isLike == true;
+  const hasDisliked = currentUserReaction?.isLike === false;
+  const likeCount = reactions.filter((r) => r.isLike == true).length;
+  const dislikeCount = reactions.filter((r) => r.isLike === false).length;
   // Get first 3 users who liked
-  const likedUsers = reactions.filter((r) => r.isLike).slice(0, 3);
-
+  const likedUsers = reactions.filter((r) => r.isLike == true).slice(0, 3);
   return (
     <div className="song-reactions">
       <button
         className={`song-reactions__button ${
           hasLiked ? "song-reactions__button--active" : ""
         }`}
-        onClick={handleToggle}
+        onClick={() => handleToggle(true)}
         disabled={isLoading || !currentUserId}
         title={hasLiked ? "Unlike" : "Like"}
       >
@@ -70,6 +71,26 @@ export default function SongReactions({
         />
         {likeCount > 0 && (
           <span className="song-reactions__count">{likeCount}</span>
+        )}
+      </button>
+
+       {/* DISLIKE */}
+      <button
+        className={`song-reactions__button ${
+          hasDisliked ? "song-reactions__button--dislike-active" : ""
+        }`}
+        onClick={() => handleToggle(false)}
+        disabled={isLoading || !currentUserId}
+        title={hasDisliked ? "Remove dislike" : "Dislike"}
+        aria-label={hasDisliked ? "Remove dislike" : "Dislike"}
+      >
+        <ThumbsDown
+          size={16}
+          fill={hasDisliked ? "currentColor" : "none"}
+          className="song-reactions__thumbsdown"
+        />
+        {dislikeCount > 0 && (
+          <span className="song-reactions__count">{dislikeCount}</span>
         )}
       </button>
 
